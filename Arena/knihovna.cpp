@@ -10,6 +10,11 @@ void report(const std::string & spell_name, const std::string & caster_name, con
 	std::cout << caster_name << " pouziva " << spell_name << " na " << target_name << std::endl;
 }
 
+cislo Spell::calculate_damage(Mage & caster, Mage & target, spell_families f) const {
+	target.get_resist().resize(f + 1); // TODO: Tohle se mi nelibi, je to proto, ze z maga nedokazu zjistit pocet elementu, ktere jsem v knihovne
+	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) - (target.get_resist()[f] * damage_ / 100));
+}
+
 // Ohniva magie
 void Fire_magic::elemental_passive_(Mage & caster) {
 	if (distribution(generator) < 25) {// 25% sance, ze se mag sam zapali a da si desetinu dmg
@@ -18,13 +23,9 @@ void Fire_magic::elemental_passive_(Mage & caster) {
 	}
 }; // TODO: implementovat ohnivou passivku
 
-cislo Fire_magic::calculate_damage_(Mage & caster, Mage & target) const {
-	return (cislo)(damage_ * (1 + (double)caster.get_spell_power()/100) - (target.get_fire_resist() * damage_ / 100));
-}
-
 void Fireball::cast_( Mage & caster, Mage & target) {
 	report(name_, caster.get_name(), target.get_name());
-	target.get_health() -= calculate_damage(caster, target);
+	target.get_health() -= calculate_damage(caster, target, spell_families::fire);
 	elemental_passive(caster);
 }
 
@@ -36,12 +37,9 @@ void Ice_magic::elemental_passive_(Mage & caster) {
 	}
 }
 
-cislo Ice_magic::calculate_damage_(Mage & caster, Mage & target) const {
-	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) - (target.get_ice_resist() * damage_ / 100));
-}
 
 void Ice_lance::cast_( Mage & caster, Mage & target) {
 	report(name_, caster.get_name(), target.get_name());
-	target.get_health() -= calculate_damage(caster, target);
+	target.get_health() -= calculate_damage(caster, target, spell_families::ice);
 	elemental_passive(caster);
 }

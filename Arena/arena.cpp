@@ -23,7 +23,7 @@ void Arena::souboj() {
 	time_ = 0;
 
 	for (auto it = team1_.begin(); it != team1_.end(); ++it) {
-		it->second.naplanuj_kouzlo();
+		it->second.naplanuj_kouzlo(); // Zacne ukazovat na konec seznamu naucenych kouzel
 	}
 	for (auto it = team2_.begin(); it != team2_.end(); ++it) {
 		it->second.naplanuj_kouzlo();
@@ -33,11 +33,11 @@ void Arena::souboj() {
 	while (!konec) {
 		std::cout << std::endl << time_ << ". kolo" << std::endl; // Vypis casu
 
-		for (auto it = team1_.begin(); it != team1_.end(); ++it) {
-			it->second.cast_spell(team2_);
+		for (auto it = team1_.begin(); it != team1_.end(); ++it) { // TODO: Kdybych chtel delat kouzla, co zerou manu, byl by druhy tym znevyhodnen
+			it->second.akce(team2_);
 		}
 		for (auto it = team2_.begin(); it != team2_.end(); ++it) {
-			it->second.cast_spell(team1_);
+			it->second.akce(team1_);
 		}
 
 		for (auto it = team1_.begin(); it != team1_.end(); ++it) {

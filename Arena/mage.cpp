@@ -8,12 +8,13 @@ void Mage::buy(const vybaveni & v) {
 	health_regen_ += v.get_health_regen();
 	mana_ += v.get_mana();
 	mana_regen_ += v.get_mana_regen();
-	fire_resist_ += v.get_fire_resist();
-	ice_resist_ += v.get_ice_resist();
+	resistance_.resize(v.get_resistance().size());
+	for (std::uint16_t i = 0; i < v.get_resistance().size(); ++i)
+		resistance_[i] += v.get_resistance()[i];
 	spell_power_ += v.get_spell_power();
 }
 
-void Mage::cast_spell( team_container & enemy_team) {
+void Mage::akce( team_container & enemy_team) {
 	// Regenerace
 	health_ += health_regen_;
 	if (health_ > max_health_) health_ = max_health_;
@@ -58,5 +59,4 @@ void Mage::cast_spell( team_container & enemy_team) {
 			casting_time_ = 0;
 		}
 	}
-	// TODO: Po utoku na maga se musim postarat o jeho presunuti v containeru
 }

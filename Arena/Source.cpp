@@ -4,13 +4,13 @@
 
 int main(int argc, char * * argv) {
 	Knihovna knihovna;
-	Weapons weapons;
+	Weapons weapons; // TODO: weapons
 	Mage Woromi{ "Woromi" };
 	Mage Modrozub{ "Modrozub" };
 	Woromi.learn(knihovna.get_spell("Ice lance"));
-	//Woromi.learn(knihovna.get_spell("Fireball"));
 	Modrozub.learn(knihovna.get_spell("Fireball"));
-	//Modrozub.learn(knihovna.get_spell("Ice lance"));
+
+	Modrozub.buy(*weapons.get_weapon("Wooden staff"));
 
 	Arena arena;
 

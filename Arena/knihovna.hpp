@@ -1,6 +1,5 @@
 #ifndef knihovna_hpp
 #define knihovna_hpp
-#pragma once // TODO: Nejsem si jisty, co to znamena
 
 #include "mage.hpp" // Je spravne includovat dva soubory navzajem? 
 
@@ -8,18 +7,19 @@
 #include <string>
 #include <memory>
 
-class Mage; // TODO: Dopredna definice, musim to jeste nekde dodefinovat
+class Mage;
 
 using cislo = int;
 
+enum spell_families { fire, ice, size };
 
-class Spell { // Primarne je mysleno jako kouzlo, ale je mozne pridat napr. tridu kouzel "technologie" a jeji potomek napr. "neutronovy kanon"
+class Spell { // Primarne je mysleno jako kouzlo, ale je mozne pridat napr. tridu kouzel "jaderna fyzika" a jeji potomek napr. "neutronovy kanon"
 public:
 	virtual ~Spell() {};
 	Spell(std::string name, cislo damage, cislo cost, cislo casting_time, bool single_target) : name_{ name }, damage_{ damage }, cost_{ cost }, casting_time_{ casting_time }, single_target_{single_target} {};
 	void cast( Mage & caster, Mage & target) { cast_( caster, target); } // Chci menit maga -> nekonstantni reference
 	void elemental_passive(Mage & caster) { elemental_passive_(caster); };
-	cislo calculate_damage(Mage & caster, Mage & target) const { return calculate_damage_(caster, target); }
+	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
 	// get a set
 	std::string get_name() const { return name_; }
 	cislo get_damage() const { return damage_; } // TODO: Chchi aby level jenom nasobil?
@@ -35,7 +35,6 @@ protected:
 private:
 	virtual void cast_( Mage & caster, Mage & target) {} // Chci menit maga -> nekonstantni reference
 	virtual void elemental_passive_(Mage & caster) {};
-	virtual cislo calculate_damage_(Mage & caster, Mage & target) const = 0;
 };
 
 // Ohniva magie
@@ -44,7 +43,6 @@ public:
 	using Spell::Spell; // Konstruktor zdedeny od predka
 private:
 	virtual void elemental_passive_(Mage & caster) override;
-	virtual cislo calculate_damage_(Mage & caster, Mage & target) const override;
 };
 
 class Fireball : public Fire_magic {
@@ -60,7 +58,6 @@ public:
 	using Spell::Spell;
 private:
 	virtual void elemental_passive_(Mage & caster) override;
-	virtual cislo calculate_damage_(Mage & caster, Mage & target) const override;
 };
 
 class Ice_lance : public Ice_magic {
@@ -69,6 +66,7 @@ public:
 private:
 	virtual void cast_( Mage & caster, Mage & target) override;
 };
+
 
 
 
