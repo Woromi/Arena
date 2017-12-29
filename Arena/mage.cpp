@@ -1,23 +1,30 @@
 #include "mage.hpp"
 
-void aktualizuj_hp(team_container & enemy_team, team_iterator & target) {
-	cislo old_health = target->first;
-	cislo new_health = target->second.get_health();
-	if (new_health != old_health) { // TODO: Vymyslet to lepe - ted ma vyhodu zacinajici tym
-		auto mag = std::move(target->second);
-		enemy_team.erase(target);
-		if (new_health > 0) // Pokud mag stale jeste zije
-			enemy_team.emplace(new_health, std::move(mag));
-	}
+#include <iostream>
+
+void Mage::buy(const vybaveni & v) {
+	money_ -= v.get_price();
+	health_ += v.get_health();
+	health_regen_ += v.get_health_regen();
+	mana_ += v.get_mana();
+	mana_regen_ += v.get_mana_regen();
+	fire_resist_ += v.get_fire_resist();
+	ice_resist_ += v.get_ice_resist();
+	spell_power_ += v.get_spell_power();
 }
 
-void Mage::Akce(team_container & enemy_team) {
+void Mage::cast_spell( team_container & enemy_team) {
 	// Regenerace
 	health_ += health_regen_;
 	if (health_ > max_health_) health_ = max_health_;
 	mana_ += mana_regen_;
 	if (mana_ > max_mana_) mana_ = max_mana_;
 
+	// Burn
+	if (burn_ > 0) {
+		health_ -= 5;
+		--burn_;
+	}
 
 	if (pristi_kouzlo_ == kouzla_.end()) // Je zacatek a jeste zadne kouzlo nemas vybrane
 		pristi_kouzlo_ = kouzla_.begin();
@@ -25,7 +32,8 @@ void Mage::Akce(team_container & enemy_team) {
 	{
 		// Postup v kouzleni (pokud mas dostatek many, zacni)
 		if (mana_ >= (**pristi_kouzlo_).get_cost())
-			++casting_time_;
+			if (!frozen_) ++casting_time_;
+			else frozen_ = false;
 		else // Kdyby jsi nahodou ztratil potrebnou manu, musis zacit odzacatku
 			casting_time_ = 0; 
 
@@ -36,13 +44,11 @@ void Mage::Akce(team_container & enemy_team) {
 			if ((**pristi_kouzlo_).single_target()) { 
 				team_iterator target = enemy_team.begin();
 				(**pristi_kouzlo_).cast(*this, target->second);
-				aktualizuj_hp(enemy_team, target);
 			}
 			// Jinak ho pouzij na vsechny
 			else { 
 				for (auto it = enemy_team.begin(); it != enemy_team.end(); ++it) {
 					(**pristi_kouzlo_).cast(*this, it->second);
-					aktualizuj_hp(enemy_team, it);
 				}
 			}
 

@@ -18,8 +18,9 @@ public:
 	virtual ~Spell() {};
 	Spell(std::string name, cislo damage, cislo cost, cislo casting_time, bool single_target) : name_{ name }, damage_{ damage }, cost_{ cost }, casting_time_{ casting_time }, single_target_{single_target} {};
 	void cast( Mage & caster, Mage & target) { cast_( caster, target); } // Chci menit maga -> nekonstantni reference
-	void elemental_passive() { elemental_passive_(); };
-	// get
+	void elemental_passive(Mage & caster) { elemental_passive_(caster); };
+	cislo calculate_damage(Mage & caster, Mage & target) const { return calculate_damage_(caster, target); }
+	// get a set
 	std::string get_name() const { return name_; }
 	cislo get_damage() const { return damage_; } // TODO: Chchi aby level jenom nasobil?
 	cislo get_cost() const { return cost_; }
@@ -33,7 +34,8 @@ protected:
 	bool single_target_;
 private:
 	virtual void cast_( Mage & caster, Mage & target) {} // Chci menit maga -> nekonstantni reference
-	virtual void elemental_passive_() {};
+	virtual void elemental_passive_(Mage & caster) {};
+	virtual cislo calculate_damage_(Mage & caster, Mage & target) const = 0;
 };
 
 // Ohniva magie
@@ -41,7 +43,8 @@ class Fire_magic : public Spell {
 public:
 	using Spell::Spell; // Konstruktor zdedeny od predka
 private:
-	virtual void elemental_passive_() override;
+	virtual void elemental_passive_(Mage & caster) override;
+	virtual cislo calculate_damage_(Mage & caster, Mage & target) const override;
 };
 
 class Fireball : public Fire_magic {
@@ -56,7 +59,8 @@ class Ice_magic : public Spell {
 public:
 	using Spell::Spell;
 private:
-	virtual void elemental_passive_() override;
+	virtual void elemental_passive_(Mage & caster) override;
+	virtual cislo calculate_damage_(Mage & caster, Mage & target) const override;
 };
 
 class Ice_lance : public Ice_magic {
@@ -78,7 +82,7 @@ using MapKnihovna = std::map<std::string, PtrSpell>;
 struct Knihovna {
 	Knihovna() {
 		Spells["Fireball"] = std::make_unique<Fireball>("Fireball", 100, 90, 5, true); // TODO: Dat Fireball_cost do promenne
-		Spells["Ice lance"] = std::make_unique<Ice_lance>("Ice lance", 30, 40, 2, true);
+		Spells["Ice lance"] = std::make_unique<Ice_lance>("Ice lance", 30, 40, 1, true);
 	}
 	Spell * get_spell(std::string spell) { return Spells.at(spell).get(); }
 	//const MapKnihovna & get_spells() const { return Spells; }
