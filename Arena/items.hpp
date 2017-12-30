@@ -55,35 +55,17 @@ class robe: public item {
 
 
 
-struct Weapons {
-public:
-	friend struct Shop;
-	weapon * get_weapon(const std::string & name) { return &weapons_.at(name); }
-	void show_weapons() const;
-private:
-	std::map<std::string, weapon> weapons_; // TODO: Je spravne to delat pres unique_ptr?
-};
-
-struct Robes {
-public:
-	friend struct Shop;
-	robe * get_robe(const std::string & name) { return &robes_.at(name); }
-	void show_robes() const;
-private:
-	std::map<std::string, robe> robes_;
-};
-
 struct Shop {
 public:
 	Shop(const std::string & file_name);
-	weapon * get_weapon(const std::string & name) { return weapon_shop_.get_weapon(name); }
-	robe * get_robe(const std::string & name) { return robes_shop_.get_robe(name); }
+	weapon * get_weapon(const std::string & name);
+	robe * get_robe(const std::string & name);
 	// Vypis zbozi na cout
-	void show_weapons() const { weapon_shop_.show_weapons(); }
-	void show_robes() const { robes_shop_.show_robes(); }
+	void show_weapons() const;
+	void show_robes() const;
 private:
-	Weapons weapon_shop_;
-	Robes robes_shop_;
+	std::map<std::string, weapon> weapon_shop_;
+	std::map<std::string, robe> robes_shop_;
 };
 
 #endif // !equipement_hpp

@@ -1,6 +1,7 @@
 #include "knihovna.hpp"
 
-#include <iostream>
+#include <iostream> // cout
+#include <iomanip> // setw
 #include <random>
 
 std::default_random_engine generator; // TODO: Nahoda neni zatim nahodna
@@ -15,6 +16,44 @@ cislo Spell::calculate_damage(Mage & caster, Mage & target, spell_families f) co
 	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) * ((1 - target.get_resist()[f] / 100)));
 }
 
+void Spell::show_spell() const {
+	std::cout
+		<< std::setw(30) << name_
+		<< std::setw(15) << damage_
+		<< std::setw(15) << cost_
+		<< std::setw(15) << casting_time_;
+	switch (single_target_)
+	{
+	case true:
+		std::cout << std::setw(15) << "Single enemy" << std::endl;
+		break;
+	case false:
+		std::cout << std::setw(15) << "All enemies" << std::endl;
+		break;
+	}
+}
+
+Spell * Knihovna::get_spell(std::string spell) const { 
+	if (spells.find(spell) != spells.end())
+		return spells.at(spell).get();
+	else
+		std::cout << "Kouzlo s nazvem >>" << spell << "<< nebylo nalezeno" << std::endl;
+	return nullptr;
+}
+
+void Knihovna::show_spells() const {
+	std::cout
+		<< std::setw(30) << "Name:"
+		<< std::setw(15) << "Damage:"
+		<< std::setw(15) << "Mana cost:"
+		<< std::setw(15) << "Casting time:"
+		<< std::setw(15) << "Target"
+		<< std::endl;
+	for (auto && spell : spells)
+	{
+		spell.second->show_spell();
+	}
+}
 
 
 

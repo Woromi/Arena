@@ -2,6 +2,12 @@
 
 #include <iostream>
 
+void Mage::learn(Spell * spell) { 
+	if (spell != nullptr) {
+		kouzla_.emplace_back(spell);
+		std::cout << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
+	}
+}
 
 void Mage::akce( team_container & enemy_team) {
 	// Regenerace
@@ -53,15 +59,15 @@ void Mage::akce( team_container & enemy_team) {
 
 // Nakupovani a prodavani predmetu
 void Mage::buy_weapon(weapon * new_weapon) {
-	if (new_weapon->buy(*this))
+	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy(*this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
 	{
-		weapon_ = new_weapon;
+		weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
 		std::cout << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
 	}
 }
 
 void Mage::sell_weapon() {
-	if (weapon_ != nullptr)
+	if (weapon_ != nullptr) // Pokud ma nejakou zbran, prodej ji
 	{
 		weapon_->sell(*this);
 		std::cout << this->name_ << " prodal " << weapon_->get_name() << std::endl;
@@ -70,7 +76,7 @@ void Mage::sell_weapon() {
 }
 
 void Mage::buy_robe(robe * new_robe) {
-	if (new_robe->buy(*this))
+	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy(*this)) // Kopirovani je castym zdrojem chyb
 	{
 		robe_ = new_robe;
 		std::cout << this->name_ << " si koupil " << robe_->get_name() << std::endl;

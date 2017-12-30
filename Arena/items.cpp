@@ -88,7 +88,7 @@ Shop::Shop(const std::string & file_name) {
 			getline(ifs, line);
 			while (line != "") { // Dokud nenarazis na prazdnou radku
 				std::string name = line;
-				weapon_shop_.weapons_.emplace(name, weapon{ ifs, name }); // Precte vsechny radky s vlastnostma a jeden prazdny potom (aby vedel kdy ma skoncit)
+				weapon_shop_.emplace(name, weapon{ ifs, name }); // Precte vsechny radky s vlastnostma a jeden prazdny potom (aby vedel kdy ma skoncit)
 				getline(ifs, line);
 			}
 		}
@@ -96,7 +96,7 @@ Shop::Shop(const std::string & file_name) {
 			getline(ifs, line);
 			while (line != "") { // Dokud nenarazis na prazdnou radku
 				std::string name = line;
-				robes_shop_.robes_.emplace(name, robe{ ifs, name });
+				robes_shop_.emplace(name, robe{ ifs, name });
 				getline(ifs, line);
 			}
 		}
@@ -137,18 +137,35 @@ void show_headline() {
 		<< std::endl;
 }
 
-void Weapons::show_weapons() const {
+void Shop::show_weapons() const {
 	std::cout << "Weapons:" << std::endl;
 	show_headline();
-	for (auto && item : weapons_) {
+	for (auto && item : weapon_shop_) {
 		item.second.show_stats();
 	}
 }
 
-void Robes::show_robes() const {
+void Shop::show_robes() const {
 	std::cout << "Robes:" << std::endl;
 	show_headline();
-	for (auto && item : robes_) {
+	for (auto && item : robes_shop_) {
 		item.second.show_stats();
 	}
+}
+
+weapon * Shop::get_weapon(const std::string & name) { 
+	if (weapon_shop_.find(name) != weapon_shop_.end())
+		return &weapon_shop_.at(name);
+	else 
+		std::cout << "Zbran s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+	return nullptr;
+}
+
+
+robe * Shop::get_robe(const std::string & name) { 
+	if (robes_shop_.find(name) != robes_shop_.end())
+		return &robes_shop_.at(name);
+	else
+		std::cout << "Roba s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+	return nullptr;
 }

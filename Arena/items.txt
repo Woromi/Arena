@@ -24,4 +24,3 @@ health=200
 fire_resistance=25
 ice_resistance=25
 =
-

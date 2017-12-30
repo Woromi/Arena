@@ -52,7 +52,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="equipement.txt">
+    <Text Include="items.txt">
       <Filter>Zdrojové soubory</Filter>
     </Text>
   </ItemGroup>

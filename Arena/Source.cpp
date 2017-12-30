@@ -1,17 +1,16 @@
 #include "arena.hpp"
 #include "read_input.hpp"
 
+#include <string>
+
 int main(int argc, char * * argv) {
 	Knihovna knihovna;
-	Shop shop{ "equipement.txt" }; // Nacti vybaveni ze souboru
+	Shop shop{ "items.txt" }; // Nacti vybaveni ze souboru
 
-	Arena arena;
-
-
-
+	Arena arena = read_input(knihovna, shop);
 
 	// Docasne vytvareni tymu
-	{	
+/*	{	
 		Mage Woromi{ "Woromi" };
 		Mage Modrozub{ "Modrozub" };
 		Woromi.learn(knihovna.get_spell("Ice lance"));
@@ -24,9 +23,7 @@ int main(int argc, char * * argv) {
 
 		arena.team1_add(Woromi);
 		arena.team2_add(Modrozub);
-	}
-
-	shop.show_weapons();
+	}//*/
 
 	arena.souboj();
 }

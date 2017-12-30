@@ -20,6 +20,7 @@ public:
 	void cast( Mage & caster, Mage & target) { cast_( caster, target); } // Chci menit maga -> nekonstantni reference
 	void elemental_passive(Mage & caster) { elemental_passive_(caster); };
 	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
+	void show_spell() const;
 	// get a set
 	std::string get_name() const { return name_; }
 	cislo get_damage() const { return damage_; }
@@ -79,13 +80,14 @@ using MapKnihovna = std::map<std::string, PtrSpell>;
 // Knihovna - jsou v ni ulozeny vsechny spelly. Hrac, ktery se nauci kouzlo se nauci jenom odkaz do teto knihovny
 struct Knihovna {
 	Knihovna() {										//	Name			Damage	Cost	Casting_time	Single_target
-		Spells["Fireball"] = std::make_unique<Fireball>(	"Fireball",		100,	90,		5,				true);
-		Spells["Ice lance"] = std::make_unique<Ice_lance>(	"Ice lance",	30,		40,		1,				true);
+		spells["Fireball"] = std::make_unique<Fireball>(	"Fireball",		100,	90,		5,				true);
+		spells["Ice lance"] = std::make_unique<Ice_lance>(	"Ice lance",	30,		40,		1,				true);
 	}
-	Spell * get_spell(std::string spell) { return Spells.at(spell).get(); }
+	Spell * get_spell(std::string spell) const;
+	void show_spells() const;
 	//const MapKnihovna & get_spells() const { return Spells; }
 private:
-	MapKnihovna Spells;
+	MapKnihovna spells;
 };
 
 
