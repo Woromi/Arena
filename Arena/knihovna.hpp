@@ -22,7 +22,7 @@ public:
 	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
 	// get a set
 	std::string get_name() const { return name_; }
-	cislo get_damage() const { return damage_; } // TODO: Chchi aby level jenom nasobil?
+	cislo get_damage() const { return damage_; }
 	cislo get_cost() const { return cost_; }
 	cislo get_casting_time() const { return casting_time_; }
 	bool single_target() const { return single_target_; }
@@ -78,9 +78,9 @@ using MapKnihovna = std::map<std::string, PtrSpell>;
 
 // Knihovna - jsou v ni ulozeny vsechny spelly. Hrac, ktery se nauci kouzlo se nauci jenom odkaz do teto knihovny
 struct Knihovna {
-	Knihovna() {
-		Spells["Fireball"] = std::make_unique<Fireball>("Fireball", 100, 90, 5, true); // TODO: Dat Fireball_cost do promenne
-		Spells["Ice lance"] = std::make_unique<Ice_lance>("Ice lance", 30, 40, 1, true);
+	Knihovna() {										//	Name			Damage	Cost	Casting_time	Single_target
+		Spells["Fireball"] = std::make_unique<Fireball>(	"Fireball",		100,	90,		5,				true);
+		Spells["Ice lance"] = std::make_unique<Ice_lance>(	"Ice lance",	30,		40,		1,				true);
 	}
 	Spell * get_spell(std::string spell) { return Spells.at(spell).get(); }
 	//const MapKnihovna & get_spells() const { return Spells; }

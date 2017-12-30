@@ -2,7 +2,7 @@
 #define mage_hpp
 
 #include "knihovna.hpp"
-#include "equipement.hpp"
+#include "items.hpp"
 
 #include <string>
 #include <vector>
@@ -10,6 +10,11 @@
 
 class Spell; // Kvuli seznamu kouzel
 class Mage; // Kvuli team_containeru
+
+struct Shop;
+class weapon;
+class robe;
+
 using cislo = int;
 using team_container = std::multimap<cislo, Mage>;
 using team_iterator = team_container::iterator;
@@ -29,14 +34,27 @@ public:
 
 	// get a set
 	cislo & get_health() { return health_; }
-	const cislo & get_spell_power() const { return spell_power_; }
+	cislo & get_max_health() { return max_health_; }
+	cislo & get_health_regen() { return health_regen_; }
+	cislo & get_mana() { return mana_; }
+	cislo & get_max_mana() { return max_mana_; }
+	cislo & get_mana_regen() { return mana_regen_; }
+	cislo & get_money() { return money_; }
+ 	cislo & get_spell_power() { return spell_power_; }
 	std::vector<cislo> & get_resist() { return resistance_; } 
 	const std::string & get_name() const { return name_; }
 	void set_frozen() { frozen_ = true; }
 	void set_burn(cislo pocet_kol) { burn_ = pocet_kol; }
 
-	// buy and sell
-	void buy(const vybaveni & v);
+	// buy a sell
+	void buy_weapon(weapon * new_weapon);
+	void sell_weapon();
+	void buy_robe(robe * new_robe);
+	void sell_robe();
+
+	// Pouze na prohlizeni
+	weapon * get_weapon() const { return weapon_; }
+	robe * get_robe() const { return robe_; }
 private:
 	// Jmeno
 	std::string name_;
@@ -60,7 +78,8 @@ private:
 	kouzla_container kouzla_;
 	kouzla_const_iterator pristi_kouzlo_;
 	// Equipement
-	vybaveni * weapon;
+	weapon * weapon_;
+	robe * robe_;
 };
 
 #endif // !mage_hpp

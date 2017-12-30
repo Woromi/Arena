@@ -1,0 +1,27 @@
+weapons
+Wooden staff
+price=100
+spell_power=50
+mana_regen=1
+=
+Wooden staff of flames
+price=200
+spell_power=50
+mana_regen=1
+fire_resistance=10
+=
+
+robes
+Robe
+price=100
+health=50
+health_regen=5
+ice_resistance=5
+=
+Heavy armored robe
+price=500
+health=200
+fire_resistance=25
+ice_resistance=25
+=
+

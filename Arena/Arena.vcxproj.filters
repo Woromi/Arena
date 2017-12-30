@@ -24,7 +24,10 @@
     <ClInclude Include="knihovna.hpp">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
-    <ClInclude Include="equipement.hpp">
+    <ClInclude Include="items.hpp">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="read_input.hpp">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,5 +44,16 @@
     <ClCompile Include="arena.cpp">
       <Filter>Zdrojové soubory</Filter>
     </ClCompile>
+    <ClCompile Include="items.cpp">
+      <Filter>Zdrojové soubory</Filter>
+    </ClCompile>
+    <ClCompile Include="read_input.cpp">
+      <Filter>Zdrojové soubory</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="equipement.txt">
+      <Filter>Zdrojové soubory</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -2,17 +2,6 @@
 
 #include <iostream>
 
-void Mage::buy(const vybaveni & v) {
-	money_ -= v.get_price();
-	health_ += v.get_health();
-	health_regen_ += v.get_health_regen();
-	mana_ += v.get_mana();
-	mana_regen_ += v.get_mana_regen();
-	resistance_.resize(v.get_resistance().size());
-	for (std::uint16_t i = 0; i < v.get_resistance().size(); ++i)
-		resistance_[i] += v.get_resistance()[i];
-	spell_power_ += v.get_spell_power();
-}
 
 void Mage::akce( team_container & enemy_team) {
 	// Regenerace
@@ -58,5 +47,41 @@ void Mage::akce( team_container & enemy_team) {
 			if (pristi_kouzlo_ == kouzla_.end()) pristi_kouzlo_ = kouzla_.begin();
 			casting_time_ = 0;
 		}
+	}
+}
+
+
+// Nakupovani a prodavani predmetu
+void Mage::buy_weapon(weapon * new_weapon) {
+	if (new_weapon->buy(*this))
+	{
+		weapon_ = new_weapon;
+		std::cout << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
+	}
+}
+
+void Mage::sell_weapon() {
+	if (weapon_ != nullptr)
+	{
+		weapon_->sell(*this);
+		std::cout << this->name_ << " prodal " << weapon_->get_name() << std::endl;
+		weapon_ = nullptr;
+	}
+}
+
+void Mage::buy_robe(robe * new_robe) {
+	if (new_robe->buy(*this))
+	{
+		robe_ = new_robe;
+		std::cout << this->name_ << " si koupil " << robe_->get_name() << std::endl;
+	}
+}
+
+void Mage::sell_robe() {
+	if (robe_ != nullptr)
+	{
+		robe_->sell(*this);
+		std::cout << this->name_ << " prodal " << robe_->get_name() << std::endl;		
+		robe_ = nullptr;
 	}
 }
