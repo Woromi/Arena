@@ -7,10 +7,11 @@ int main(int argc, char * * argv) {
 	Knihovna knihovna;
 	Shop shop{ "items.txt" }; // Nacti vybaveni ze souboru
 
-	Arena arena = read_input(knihovna, shop);
+	//Arena arena = read_input(knihovna, shop);
 
+		Arena arena;
 	// Docasne vytvareni tymu
-/*	{	
+	{	
 		Mage Woromi{ "Woromi" };
 		Mage Modrozub{ "Modrozub" };
 		Woromi.learn(knihovna.get_spell("Ice lance"));

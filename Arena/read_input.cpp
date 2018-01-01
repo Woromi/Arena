@@ -25,7 +25,7 @@ bool icompare(std::string const& a, std::string const& b)
 void write_help() { // TODO: Zarovnat text doleva
 	std::cout
 		<< std::setw(40) << "Mage name "<<"- zacne vytvaret noveho maga se jmenem 'name'"	<< std::endl	// Mage name
-		<< std::setw(40) << "School "<<"- vypise seznam kouzel, ktere se mag muze naucit"	<< std::endl	// School
+		<< std::setw(40) << "Library "<<"- vypise seznam kouzel, ktere se mag muze naucit"	<< std::endl	// School
 		<< std::setw(40) << "Learn 'name' "<<"\t- nauci maga kouzlo se jmenem 'name'"		<< std::endl	// Learn spell_name
 		<< std::setw(40) << "Shop "<<"- vypise seznam veci, ktere si mag muze koupit"		<< std::endl	// Shop
 		<< std::setw(40) << "Buy weapon|robe|... 'name' "<<"\t- mag si koupi predmet se jmenem 'name'"		<< std::endl	// Buy item_name
@@ -56,8 +56,6 @@ void team(Arena & arena, Mage mage, int i) { // Tady predavam hodnotou, budu pre
 	}
 }
 
-//void show_mage_stats(const Mage & mage);
-
 void my_getline(std::istream & is, std::string & vstup) { // Potrebuju, aby na zacatku preskocil mezery a aby prvni pismeno bylo velke a ostatni male
 	std::getline(is, vstup);
 	while (vstup[0] == ' ')
@@ -74,18 +72,18 @@ Arena read_input( Knihovna & knihovna, Shop & shop)
 	std::cin >> vstup; // TODO: Ukonci to cteni na konci radky?
 	while (vstup != "Fight") {
 		if		(icompare(vstup, "help")) write_help();
-		else if (icompare(vstup, "School")) knihovna.show_spells();
+		else if (icompare(vstup, "Library")) knihovna.show_spells();
 		else if (icompare(vstup, "Shop")) write_items(shop);
 		else if (icompare(vstup, "Mage")) {					// Vytvor maga
 			std::cin >> vstup; 
 			Mage mage{ vstup };
 			std::cout << mage.get_name() << " muze nyni navstivit knihovnu nebo obchod." << std::endl;
 			std::cin >> vstup;
-			while (!icompare(vstup, "Team")) {				// A dokud ho nezaradis do tymy, muzes ho upravovat
+			while (!icompare(vstup, "Team")) {				// A dokud ho nezaradis do tymu, muzes ho upravovat
 				if		(icompare(vstup, "help")) write_help();
-				//else if (icompare(vstup, "Show")) show_mage_stats(mage);
-				else if (icompare(vstup, "School")) knihovna.show_spells();
-				else if (icompare(vstup, "Learn")) { my_getline(std::cin, vstup); mage.learn(knihovna.get_spell(vstup)); }
+				else if (icompare(vstup, "Show")) mage.show_stats();
+				else if (icompare(vstup, "Library")) knihovna.show_spells();
+				else if (icompare(vstup, "Learn")) { my_getline(std::cin, vstup); mage.learn(knihovna.get_spell(vstup)); mage.show_stats(); }
 				else if (icompare(vstup, "Shop")) write_items(shop);
 				else if (icompare(vstup, "Buy")) { 
 					std::cin >> vstup; 
@@ -95,6 +93,7 @@ Arena read_input( Knihovna & knihovna, Shop & shop)
 						mage.buy_robe(shop.get_robe(vstup));
 					}
 					else std::cout << "Neznamy typ predmetu: >>" << vstup << "<<" << std::endl;
+					mage.show_stats();
 				}
 				else std::cout << "Neznamy prikaz: >>" << vstup << "<<" << std::endl;
 				std::cin >> vstup;

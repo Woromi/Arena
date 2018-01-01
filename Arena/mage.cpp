@@ -1,12 +1,39 @@
 #include "mage.hpp"
 
 #include <iostream>
+#include <iomanip> // setw
+
 
 void Mage::learn(Spell * spell) { 
 	if (spell != nullptr) {
 		kouzla_.emplace_back(spell);
 		std::cout << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
 	}
+}
+
+void Mage::show_stats() {
+	std::cout
+		<< name_ << std::endl
+		// Spells
+		<< std::setw(20) << "Spells:" << std::endl;
+	for (auto && k : kouzla_) k->show_spell();
+	// Items
+	std::cout
+		<< std::setw(20) << "Items:" << std::endl
+		<< std::setw(25) << "Weapon: ";
+	if (weapon_ != nullptr)weapon_->show_stats();
+	else std::cout << "No weapon" << std::endl;
+	std::cout
+		<< std::setw(25) << "Robe: ";
+	if (robe_ != nullptr) robe_->show_stats();
+	else std::cout << "No robe" << std::endl;
+	// Stats
+	std::cout // TODO: Predelat staty do pole indexovaneho enum
+		<< "Health: " << health_ << std::endl
+		<< "Health regen: " << health_regen_ << std::endl
+		<< "Mana: " << mana_ << std::endl
+		<< "Mana regen: " << mana_regen_ << std::endl
+		<< "Spell power: " << spell_power_ << std::endl;
 }
 
 void Mage::akce( team_container & enemy_team) {

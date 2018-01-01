@@ -77,7 +77,6 @@ void Fireball::cast_( Mage & caster, Mage & target) {
 
 
 
-
 // Ledova magie
 void Ice_magic::elemental_passive_(Mage & caster) {
 	if (distribution(generator) < 50) {

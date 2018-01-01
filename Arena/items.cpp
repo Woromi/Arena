@@ -117,7 +117,8 @@ void item::show_stats() const {
 		std::cout << std::setw(15) << resistance_[i];
 	std::cout
 		<< std::setw(15) << spell_power_
-		<< std::setw(15) << std::endl;
+		<< std::setw(20) << price_
+		<< std::endl;
 }
 
 void show_headline() {
@@ -134,6 +135,7 @@ void show_headline() {
 	}
 	std::cout
 		<< std::setw(15) << "Spell power"
+		<< std::setw(20) << "Price"
 		<< std::endl;
 }
 

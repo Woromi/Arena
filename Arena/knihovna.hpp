@@ -53,6 +53,13 @@ private:
 	virtual void cast_( Mage & caster, Mage & target) override;
 };
 
+class Flamestrike : Fire_magic {
+public:
+	using Fire_magic::Fire_magic;
+private:
+	virtual void cast_(Mage & caster, Mage & target) override;
+};
+
 // Ledova magie
 class Ice_magic : public Spell {
 public:
