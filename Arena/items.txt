@@ -24,3 +24,8 @@ health=200
 fire_resistance=25
 ice_resistance=25
 =
+Robe of fire resistance
+price=500
+health=100
+fire_resistance=50
+=

@@ -8,19 +8,20 @@
 #include <vector>
 #include <map> // Jenom kvuli team_containeru
 
+// Dopredne deklarace
 class Spell; // Kvuli seznamu kouzel
 class Mage; // Kvuli team_containeru
-
-struct Shop;
-class weapon;
+class weapon; // Kvuli nakupu predmetu
 class robe;
 
+// Kontejnery
 using cislo = int;
 using team_container = std::multimap<cislo, Mage>;
 using team_iterator = team_container::iterator;
 using kouzla_container = std::vector<Spell *>;
 using kouzla_const_iterator = kouzla_container::const_iterator;
 
+// Mage
 class Mage {
 public:
 	Mage(std::string name) : name_{ name }, money_{ 1000 }, max_health_{ 500 }, health_regen_{ 5 }, max_mana_{ 500 }, mana_regen_{ 10 } {

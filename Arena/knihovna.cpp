@@ -7,13 +7,13 @@
 std::default_random_engine generator; // TODO: Nahoda neni zatim nahodna
 std::uniform_int_distribution<cislo> distribution(0, 100);
 
-void report(const std::string & spell_name, const std::string & caster_name, const std::string & target_name) { // TODO: inline?
-	std::cout << caster_name << " pouziva " << spell_name << " na " << target_name << std::endl;
+void report(const std::string & spell_name, const std::string & caster_name, const std::string & target_name, cislo calculaded_dmg) { // TODO: inline?
+	std::cout << caster_name << " pouziva " << spell_name << " na " << target_name << " a ubira mu " << calculaded_dmg << " zivotu. " << std::endl;
 }
 
 cislo Spell::calculate_damage(Mage & caster, Mage & target, spell_families f) const {
 	target.get_resist().resize(f + 1); // TODO: Tohle se mi nelibi, je to proto, ze z maga nedokazu zjistit pocet elementu, ktere jsem v knihovne
-	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) * ((1 - target.get_resist()[f] / 100)));
+	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) * (1 - (double)target.get_resist()[f] / 100)); // TODO: Vymyslet nejakou lepsi rovnici, tohle je dost provizorni
 }
 
 void Spell::show_spell() const {
@@ -60,17 +60,22 @@ void Knihovna::show_spells() const {
 
 
 // Ohniva magie
-void Fire_magic::elemental_passive_(Mage & caster) {
+void Fire_magic::elemental_passive_(Mage & caster, Mage & target) {
 	if (distribution(generator) < 25) {// 25% sance, ze se mag sam zapali a da si desetinu dmg
 		caster.set_burn(3);
 		std::cout << caster.get_name() << " podpalil sam sebe." << std::endl;
 	}
+	if (distribution(generator) < 25) {// 25% sance, ze bude podpalen protivnik da si desetinu dmg
+		target.set_burn(3);
+		std::cout << target.get_name() << " byl podpalen. " << std::endl;
+	}
 }; 
 
-void Fireball::cast_( Mage & caster, Mage & target) {
-	report(name_, caster.get_name(), target.get_name());
-	target.get_health() -= calculate_damage(caster, target, spell_families::fire);
-	elemental_passive(caster);
+void Fire_magic::cast_( Mage & caster, Mage & target) { 
+	cislo calculated_dmg = calculate_damage(caster, target, spell_families::fire);
+	report(name_, caster.get_name(), target.get_name(), calculated_dmg);
+	target.get_health() -= calculated_dmg;
+	elemental_passive(caster, target);
 }
 
 
@@ -78,15 +83,20 @@ void Fireball::cast_( Mage & caster, Mage & target) {
 
 
 // Ledova magie
-void Ice_magic::elemental_passive_(Mage & caster) {
+void Ice_magic::elemental_passive_(Mage & caster, Mage & target) {
 	if (distribution(generator) < 50) {
 		caster.set_frozen();
 		std::cout << caster.get_name() << " se zmrazil a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
 	}
+	if (distribution(generator) < 50) {
+		target.set_frozen();
+		std::cout << target.get_name() << " byl zmrazen a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
+	}
 }
 
-void Ice_lance::cast_( Mage & caster, Mage & target) {
-	report(name_, caster.get_name(), target.get_name());
-	target.get_health() -= calculate_damage(caster, target, spell_families::ice);
-	elemental_passive(caster);
+void Ice_magic::cast_( Mage & caster, Mage & target) {
+	cislo calculated_damage = calculate_damage(caster, target, spell_families::ice);
+	report(name_, caster.get_name(), target.get_name(), calculated_damage);
+	target.get_health() -= calculated_damage;
+	elemental_passive(caster, target);
 }

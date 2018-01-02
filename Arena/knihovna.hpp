@@ -18,7 +18,7 @@ public:
 	virtual ~Spell() {};
 	Spell(std::string name, cislo damage, cislo cost, cislo casting_time, bool single_target) : name_{ name }, damage_{ damage }, cost_{ cost }, casting_time_{ casting_time }, single_target_{single_target} {};
 	void cast( Mage & caster, Mage & target) { cast_( caster, target); } // Chci menit maga -> nekonstantni reference
-	void elemental_passive(Mage & caster) { elemental_passive_(caster); };
+	void elemental_passive(Mage & caster, Mage & target) { elemental_passive_(caster, target); };
 	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
 	void show_spell() const;
 	// get a set
@@ -35,7 +35,7 @@ protected:
 	bool single_target_;
 private:
 	virtual void cast_( Mage & caster, Mage & target) {} // Chci menit maga -> nekonstantni reference
-	virtual void elemental_passive_(Mage & caster) {};
+	virtual void elemental_passive_(Mage & caster, Mage & target) {};
 };
 
 // Ohniva magie
@@ -43,21 +43,9 @@ class Fire_magic : public Spell {
 public:
 	using Spell::Spell; // Konstruktor zdedeny od predka
 private:
-	virtual void elemental_passive_(Mage & caster) override;
-};
-
-class Fireball : public Fire_magic {
-public:
-	using Fire_magic::Fire_magic;
-private:
-	virtual void cast_( Mage & caster, Mage & target) override;
-};
-
-class Flamestrike : Fire_magic {
-public:
-	using Fire_magic::Fire_magic;
-private:
+	virtual void elemental_passive_(Mage & caster, Mage & target) override;	
 	virtual void cast_(Mage & caster, Mage & target) override;
+
 };
 
 // Ledova magie
@@ -65,14 +53,8 @@ class Ice_magic : public Spell {
 public:
 	using Spell::Spell;
 private:
-	virtual void elemental_passive_(Mage & caster) override;
-};
-
-class Ice_lance : public Ice_magic {
-public:
-	using Ice_magic::Ice_magic;
-private:
-	virtual void cast_( Mage & caster, Mage & target) override;
+	virtual void elemental_passive_(Mage & caster, Mage & target) override;
+	virtual void cast_(Mage & caster, Mage & target) override;
 };
 
 
@@ -86,9 +68,10 @@ using MapKnihovna = std::map<std::string, PtrSpell>;
 
 // Knihovna - jsou v ni ulozeny vsechny spelly. Hrac, ktery se nauci kouzlo se nauci jenom odkaz do teto knihovny
 struct Knihovna {
-	Knihovna() {										//	Name			Damage	Cost	Casting_time	Single_target
-		spells["Fireball"] = std::make_unique<Fireball>(	"Fireball",		100,	90,		5,				true);
-		spells["Ice lance"] = std::make_unique<Ice_lance>(	"Ice lance",	30,		40,		1,				true);
+	Knihovna() {										//		Name			Damage	Cost	Casting_time	Single_target
+		spells["Fireball"] = std::make_unique<Fire_magic>(		"Fireball",		100,	90,		5,				true);
+		spells["Flamestrike"] = std::make_unique<Fire_magic>(	"Flamestrike",	50,		100,	5,				false);
+		spells["Ice lance"] = std::make_unique<Ice_magic>(		"Ice lance",	30,		40,		1,				true);
 	}
 	Spell * get_spell(std::string spell) const;
 	void show_spells() const;

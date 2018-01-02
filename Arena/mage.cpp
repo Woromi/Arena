@@ -49,7 +49,7 @@ void Mage::akce( team_container & enemy_team) {
 		--burn_;
 	}
 
-	if (pristi_kouzlo_ == kouzla_.end()) // Je zacatek a jeste zadne kouzlo nemas vybrane
+	if (pristi_kouzlo_ == kouzla_.end()) // Je zacatek a jeste zadne kouzlo nemas vybrane, nebo jsi hloupy a neumis pouzivat zadne kouzlo (pokud jsi se ho zapomel naucit)
 		pristi_kouzlo_ = kouzla_.begin();
 	else // Pristi kouzlo je nejake kouzlo
 	{

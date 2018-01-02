@@ -5,7 +5,7 @@
 #include <cctype>
 #include <iomanip>
 
-// https://stackoverflow.com/questions/23943728/case-insensitive-standard-string-comparison-in-c
+// Funkce pro porovnani stringu bez ohledu na velikost pismen prevzata z https://stackoverflow.com/questions/23943728/case-insensitive-standard-string-comparison-in-c
 bool icompare_pred(unsigned char a, unsigned char b)
 {
 	return std::tolower(a) == std::tolower(b);
@@ -67,10 +67,11 @@ void my_getline(std::istream & is, std::string & vstup) { // Potrebuju, aby na z
 
 Arena read_input( Knihovna & knihovna, Shop & shop)
 {
+	std::cout << "Vytvorit noveho maga je mozne napsanim prikazu Mage 'jmeno'. Pro dalsi napovedu napis help. Na velikosti pismen nezalezi. " << std::endl;
 	Arena arena;
 	std::string vstup;
 	std::cin >> vstup; // TODO: Ukonci to cteni na konci radky?
-	while (vstup != "Fight") {
+	while (!icompare(vstup, "Fight")) {
 		if		(icompare(vstup, "help")) write_help();
 		else if (icompare(vstup, "Library")) knihovna.show_spells();
 		else if (icompare(vstup, "Shop")) write_items(shop);

@@ -55,5 +55,8 @@
     <Text Include="items.txt">
       <Filter>Zdrojové soubory</Filter>
     </Text>
+    <Text Include="Dokumentace.txt">
+      <Filter>Zdrojové soubory</Filter>
+    </Text>
   </ItemGroup>
 </Project>
