@@ -34,10 +34,10 @@ void Arena::souboj() {
 		std::cout << std::endl << time_ << ". kolo" << std::endl; // Vypis casu
 
 		for (auto it = team1_.begin(); it != team1_.end(); ++it) { // TODO: Kdybych chtel delat kouzla, co zerou manu, byl by druhy tym znevyhodnen
-			(*it->second).akce(team2_);
+			(*it->second).akce(this, team2_);
 		}
 		for (auto it = team2_.begin(); it != team2_.end(); ++it) {
-			(*it->second).akce(team1_);
+			(*it->second).akce(this, team1_);
 		}
 
 		for (auto it = team1_.begin(); it != team1_.end(); ++it) {

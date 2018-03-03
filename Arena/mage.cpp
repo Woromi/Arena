@@ -36,7 +36,7 @@ void Mage::show_stats() {
 		<< "Spell power: " << spell_power_ << std::endl;
 }
 
-void Mage::akce( team_container & enemy_team) {
+void Mage::akce( Arena * arena, team_container & enemy_team) {
 	// Regenerace
 	health_ += health_regen_;
 	if (health_ > max_health_) health_ = max_health_;
@@ -67,12 +67,12 @@ void Mage::akce( team_container & enemy_team) {
 			if ((**pristi_kouzlo_).single_target()) {
 				team_iterator target = enemy_team.begin();
 				(**pristi_kouzlo_).calculate_damage(*this, *(target->second), spell_families::fire);
-				(**pristi_kouzlo_).cast(*this, *(target->second));
+				(**pristi_kouzlo_).cast(arena, *this, *(target->second));
 			}
 			// Jinak ho pouzij na vsechny
 			else { 
 				for (auto it = enemy_team.begin(); it != enemy_team.end(); ++it) {
-					(**pristi_kouzlo_).cast(*this, *(it->second));
+					(**pristi_kouzlo_).cast(arena, *this, *(it->second));
 				}
 			}
 

@@ -13,6 +13,7 @@
 class Spell; 
 class weapon;
 class robe;
+class Arena;
 
 // Mage
 class Mage {
@@ -31,7 +32,7 @@ public:
 	~Mage() = default;
 
 	void learn(Spell * spell);
-	void akce(team_container & enemy_team);
+	void akce(Arena * arena, team_container & enemy_team);
 	void naplanuj_kouzlo() { pristi_kouzlo_ = kouzla_.end(); } // Je nutne mit na to funkci, protoze kdybych to udelal v konstruktoru, vadilo by mu move (ukazoval by pak na spatny container)
 	void show_stats();
 
