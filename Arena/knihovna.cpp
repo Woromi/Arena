@@ -12,8 +12,8 @@ void report(const std::string & spell_name, const std::string & caster_name, con
 }
 
 cislo Spell::calculate_damage(Mage & caster, Mage & target, spell_families f) const {
-	target.get_resist().resize(f + 1); // TODO: Tohle se mi nelibi, je to proto, ze z maga nedokazu zjistit pocet elementu, ktere jsem v knihovne
-	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) * (1 - (double)target.get_resist()[f] / 100)); // TODO: Vymyslet nejakou lepsi rovnici, tohle je dost provizorni
+//	target.get_resist().resize(f + 1); // TODO: Tohle se mi nelibi, je to proto, ze z maga nedokazu zjistit pocet elementu, ktere jsem v knihovne
+	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) * (1 - (double)target.get_resist(f) / 100)); // TODO: Vymyslet nejakou lepsi rovnici, tohle je dost provizorni
 }
 
 void Spell::show_spell() const {
@@ -74,7 +74,7 @@ void Fire_magic::elemental_passive_(Mage & caster, Mage & target) {
 void Fire_magic::cast_( Mage & caster, Mage & target) { 
 	cislo calculated_dmg = calculate_damage(caster, target, spell_families::fire);
 	report(name_, caster.get_name(), target.get_name(), calculated_dmg);
-	target.get_health() -= calculated_dmg;
+	target.add_health(-calculated_dmg);
 	elemental_passive(caster, target);
 }
 
@@ -97,6 +97,6 @@ void Ice_magic::elemental_passive_(Mage & caster, Mage & target) {
 void Ice_magic::cast_( Mage & caster, Mage & target) {
 	cislo calculated_damage = calculate_damage(caster, target, spell_families::ice);
 	report(name_, caster.get_name(), target.get_name(), calculated_damage);
-	target.get_health() -= calculated_damage;
+	target.add_health(-calculated_damage);
 	elemental_passive(caster, target);
 }

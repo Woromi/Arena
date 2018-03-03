@@ -10,15 +10,15 @@
 
 // TODO: Potrebuju tam ty deklarace, kdyz jsem presunul using do samostatne hlavicky?
 // Dopredne deklarace
-class Spell; // Kvuli seznamu kouzel
-class Mage; // Kvuli team_containeru
-class weapon; // Kvuli nakupu predmetu
+class Spell; 
+class weapon;
 class robe;
 
 // Mage
 class Mage {
 public:
 	Mage(std::string name) : name_{ name }, money_{ 1000 }, max_health_{ 500 }, health_regen_{ 5 }, max_mana_{ 500 }, mana_regen_{ 10 } {
+		resistance_.resize(spell_families::size);
 		health_ = max_health_;
 		mana_ = max_mana_;
 	};
@@ -30,22 +30,42 @@ public:
 	Mage & operator=(Mage &&) = default;
 	~Mage() = default;
 
-	void learn( Spell * spell);
+	void learn(Spell * spell);
 	void akce(team_container & enemy_team);
 	void naplanuj_kouzlo() { pristi_kouzlo_ = kouzla_.end(); } // Je nutne mit na to funkci, protoze kdybych to udelal v konstruktoru, vadilo by mu move (ukazoval by pak na spatny container)
 	void show_stats();
 
 	// get a set
-	cislo & get_health() { return health_; }
-	cislo & get_max_health() { return max_health_; }
-	cislo & get_health_regen() { return health_regen_; }
-	cislo & get_mana() { return mana_; }
-	cislo & get_max_mana() { return max_mana_; }
-	cislo & get_mana_regen() { return mana_regen_; }
-	cislo & get_money() { return money_; }
- 	cislo & get_spell_power() { return spell_power_; }
-	std::vector<cislo> & get_resist() { return resistance_; } 
+	// Health
+	void add_health(cislo value) { health_ += value; }
+	cislo get_health() const { return health_; }
+	// Max health
+	void set_max_health(cislo value) { if (value > 0) { if (value >= health_) max_health_ = value; else { max_health_ = value; health_ = value; } } }
+	cislo get_max_health() { return max_health_; }
+	// Health regen
+	void add_health_regen(cislo value) { if (health_regen_ + value >= 0) health_regen_ += value; }
+	cislo get_health_regen() const { return health_regen_; }
+	// Mana
+	void add_mana(cislo value) { if (mana_ + value > 0) mana_ += value; }
+	cislo get_mana() const { return mana_; }
+	// Max mana
+	void set_max_mana(cislo value) { if (value > 0) { if (value >= mana_) max_mana_ = value; else { max_mana_ = value; mana_ = value; } } }
+	cislo get_max_mana() const { return max_mana_; }
+	// Mana regen
+	void add_mana_regen(cislo value) { if (mana_regen_ + value >= 0) mana_regen_ += value; }
+	cislo get_mana_regen() const { return mana_regen_; }
+	// Money
+	bool spend_money(cislo price) { if (money_ - price >= 0) { money_ -= price; return true; } else return false; }
+	// Spell power
+	void add_spell_power(cislo value) { if (spell_power_ + value >= 0) spell_power_ += value; }
+	cislo get_spell_power() const { return spell_power_; }
+	// resistance
+	void add_resist(cislo index, cislo value) { if (resistance_[index] + value >= 0) resistance_[index] += value; }
+	cislo get_resist(cislo index) const { return resistance_[index]; }
+	
 	const std::string & get_name() const { return name_; }
+
+
 	void set_frozen() { frozen_ = true; }
 	void set_burn(cislo pocet_kol) { burn_ = pocet_kol; }
 

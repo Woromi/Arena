@@ -7,23 +7,20 @@
 #include <string>
 
 bool item::buy(Mage & mage) {
-	if (mage.get_money() >= price_) {
-		mage.get_money() -= price_;
-
-		mage.get_health() += health_;
-		mage.get_max_health() += health_;
-		mage.get_health_regen() += health_regen_;
+	if (mage.spend_money(price_)) {
 		
-		mage.get_mana() += mana_;
-		mage.get_max_mana() += mana_;
-		mage.get_mana_regen() += mana_regen_;
+		mage.add_health(health_);
+		mage.set_max_health(mage.get_health());
+		mage.add_health_regen(health_regen_);
+		
+		mage.add_mana(mana_);
+		mage.set_max_mana(mage.get_mana());
+		mage.add_mana_regen(mana_regen_);
 
-		auto & mage_resist = mage.get_resist();
-		mage_resist.resize(resistance_.size(), 0);
 		for (std::uint16_t i = 0; i < resistance_.size(); ++i)
-			mage_resist[i] += resistance_[i];
+			mage.add_resist(i, resistance_[i]);
 
-		mage.get_spell_power() += spell_power_;
+		mage.add_spell_power(spell_power_);
 		return true;
 	}
 	else {
@@ -33,22 +30,18 @@ bool item::buy(Mage & mage) {
 }
 
 void item::sell(Mage & mage) { // Predpokladam, ze to bude volat pouze mag, ktery ten predmet vlastni (kontroluje se to v Mage.sell_item())
-	mage.get_money() += price_ / 2;
+	mage.spend_money(-price_ / 2);
 
-	mage.get_health() -= health_;
-	mage.get_max_health() -= health_;
-	mage.get_health_regen() -= health_regen_;
+	mage.set_max_health(mage.get_max_health() - health_);
+	mage.add_health_regen(-health_regen_);
 
-	mage.get_mana() -= mana_;
-	mage.get_max_mana() -= mana_;
-	mage.get_mana_regen() -= mana_regen_;
+	mage.set_max_mana(mage.get_max_mana() - mana_);
+	mage.add_mana_regen(-mana_regen_);
 
-	auto & mage_resist = mage.get_resist();
 	for (std::uint16_t i = 0; i < resistance_.size(); ++i)
-		mage_resist[i] -= resistance_[i];
+		mage.add_resist(i, -resistance_[i]);
 
-	mage.get_spell_power() -= spell_power_;
-
+	mage.add_spell_power(-spell_power_);
 }
 
 // Cteni vlastnosti vybaveni ze souboru
@@ -122,7 +115,7 @@ void item::show_stats() const {
 }
 
 void show_headline() {
-	std::array<std::string, spell_families::size + 1> elements{ "Fire", "Ice", "Dodefinuj me v equipement.cpp" };
+	std::array<std::string, spell_families::size + 1> elements{ "Fire", "Ice", "Dodefinuj me" };
 	std::cout
 		<< std::setw(30) << "Name"
 		<< std::setw(15) << "Health"
