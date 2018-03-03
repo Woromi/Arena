@@ -36,11 +36,11 @@ int main(int argc, char * * argv) {
 		Dummy1.buy_robe(shop.get_robe("Robe of fire resistance"));
 
 		//arena.team1_add(std::move(Woromi));
-		arena.team1_add(Plosnak);
-		arena.team1_add(Plosnak2);
+		arena.team1_add(std::move(Plosnak));
+		arena.team1_add(std::move(Plosnak2));
 		//arena.team2_add(Modrozub);
-		arena.team2_add(Dummy1);
-		arena.team2_add(Dummy2);
+		arena.team2_add(std::move(Dummy1));
+		arena.team2_add(std::move(Dummy2));
 	}//*/
 
 	arena.souboj();

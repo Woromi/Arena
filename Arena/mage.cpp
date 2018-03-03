@@ -66,13 +66,13 @@ void Mage::akce( team_container & enemy_team) {
 			// Pokud ma kouzlo jen jeden cil, pouzij ho na nejslabsiho maga
 			if ((**pristi_kouzlo_).single_target()) {
 				team_iterator target = enemy_team.begin();
-				(**pristi_kouzlo_).calculate_damage(*this, target->second, spell_families::fire);
-				(**pristi_kouzlo_).cast(*this, target->second);
+				(**pristi_kouzlo_).calculate_damage(*this, *(target->second), spell_families::fire);
+				(**pristi_kouzlo_).cast(*this, *(target->second));
 			}
 			// Jinak ho pouzij na vsechny
 			else { 
 				for (auto it = enemy_team.begin(); it != enemy_team.end(); ++it) {
-					(**pristi_kouzlo_).cast(*this, it->second);
+					(**pristi_kouzlo_).cast(*this, *(it->second));
 				}
 			}
 

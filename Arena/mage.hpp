@@ -23,6 +23,13 @@ public:
 		mana_ = max_mana_;
 	};
 
+	// Zakaz kopirovani a move
+	Mage(const Mage &) = delete;
+	Mage(Mage &&) = default;
+	Mage & operator=(const Mage &) = delete;
+	Mage & operator=(Mage &&) = default;
+	~Mage() = default;
+
 	void learn( Spell * spell);
 	void akce(team_container & enemy_team);
 	void naplanuj_kouzlo() { pristi_kouzlo_ = kouzla_.end(); } // Je nutne mit na to funkci, protoze kdybych to udelal v konstruktoru, vadilo by mu move (ukazoval by pak na spatny container)

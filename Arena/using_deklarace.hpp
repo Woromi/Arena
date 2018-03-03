@@ -3,13 +3,14 @@
 
 #include <map>
 #include <vector>
+#include <memory>
 
 // Vsude
 using cislo = int;
 
 // Arena + Mage
 class Mage;
-using team_container = std::multimap<cislo, Mage>;
+using team_container = std::multimap<cislo, std::unique_ptr<Mage>>;
 using team_iterator = team_container::iterator;
 
 // Knihovna
