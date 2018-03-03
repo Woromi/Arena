@@ -22,9 +22,8 @@ bool icompare(std::string const& a, std::string const& b)
 	}
 }
 
-void write_help() { // TODO: Zarovnat text doleva
-	std::cout
-		<< std::setw(40) << "Mage name "<<"- zacne vytvaret noveho maga se jmenem 'name'"	<< std::endl	// Mage name
+void write_help(std::ostream & out) { // TODO: Zarovnat text doleva
+	out << std::setw(40) << "Mage name "<<"- zacne vytvaret noveho maga se jmenem 'name'"	<< std::endl	// Mage name
 		<< std::setw(40) << "Library "<<"- vypise seznam kouzel, ktere se mag muze naucit"	<< std::endl	// School
 		<< std::setw(40) << "Learn 'name' "<<"\t- nauci maga kouzlo se jmenem 'name'"		<< std::endl	// Learn spell_name
 		<< std::setw(40) << "Shop "<<"- vypise seznam veci, ktere si mag muze koupit"		<< std::endl	// Shop
@@ -34,9 +33,9 @@ void write_help() { // TODO: Zarovnat text doleva
 		<< std::setw(40) << "Fight "<<"- zahaji souboj s vytvorenymi magy"					<< std::endl;	// Fight
 }
 
-void write_items(const Shop & shop) {
-	shop.show_weapons();
-	shop.show_robes();
+void write_items(std::ostream & out, const Shop & shop) {
+	shop.show_weapons(out);
+	shop.show_robes(out);
 	// TODO: Pridat dalsi druhy vybaveni
 }
 
@@ -44,11 +43,11 @@ void team(Arena & arena, Mage mage, int i) { // Tady predavam hodnotou, budu pre
 	switch (i)
 	{
 	case 1:
-		std::cout << mage.get_name() << " byl zarazen do tymu 1" << std::endl;
+		arena.out << mage.get_name() << " byl zarazen do tymu 1" << std::endl;
 		arena.team1_add(std::move(mage));
 		break;
 	case 2:
-		std::cout << mage.get_name() << " byl zarazen do tymu 2" << std::endl;
+		arena.out << mage.get_name() << " byl zarazen do tymu 2" << std::endl;
 		arena.team2_add(std::move(mage));
 		break;
 	default:
@@ -66,48 +65,48 @@ void my_getline(std::istream & is, std::string & vstup) { // Potrebuju, aby na z
 }
 
 Arena read_input( Knihovna & knihovna, Shop & shop)
-{
-	std::cout << "Vytvorit noveho maga je mozne napsanim prikazu Mage 'jmeno'. Pro dalsi napovedu napis help. Na velikosti pismen nezalezi. " << std::endl;
+{	
 	Arena arena;
+	arena.out << "Vytvorit noveho maga je mozne napsanim prikazu Mage 'jmeno'. Pro dalsi napovedu napis help. Na velikosti pismen nezalezi. " << std::endl;
 	std::string vstup;
-	std::cin >> vstup; // TODO: Ukonci to cteni na konci radky?
+	arena.in >> vstup; // TODO: Ukonci to cteni na konci radky?
 	while (!icompare(vstup, "Fight")) {
-		if		(icompare(vstup, "help")) write_help();
-		else if (icompare(vstup, "Library")) knihovna.show_spells();
-		else if (icompare(vstup, "Shop")) write_items(shop);
+		if		(icompare(vstup, "help")) write_help(arena.out);
+		else if (icompare(vstup, "Library")) knihovna.show_spells(arena.out);
+		else if (icompare(vstup, "Shop")) write_items(arena.out, shop);
 		else if (icompare(vstup, "Mage")) {					// Vytvor maga
-			std::cin >> vstup; 
+			arena.in >> vstup; 
 			Mage mage{ vstup };
-			std::cout << mage.get_name() << " muze nyni navstivit knihovnu nebo obchod." << std::endl;
-			std::cin >> vstup;
+			arena.out << mage.get_name() << " muze nyni navstivit knihovnu nebo obchod." << std::endl;
+			arena.in >> vstup;
 			while (!icompare(vstup, "Team")) {				// A dokud ho nezaradis do tymu, muzes ho upravovat
-				if		(icompare(vstup, "help")) write_help();
-				else if (icompare(vstup, "Show")) mage.show_stats();
-				else if (icompare(vstup, "Library")) knihovna.show_spells();
-				else if (icompare(vstup, "Learn")) { my_getline(std::cin, vstup); mage.learn(knihovna.get_spell(vstup)); mage.show_stats(); }
-				else if (icompare(vstup, "Shop")) write_items(shop);
+				if		(icompare(vstup, "help")) write_help(arena.out);
+				else if (icompare(vstup, "Show")) mage.show_stats(arena.out);
+				else if (icompare(vstup, "Library")) knihovna.show_spells(arena.out);
+				else if (icompare(vstup, "Learn")) { my_getline(arena.in, vstup); mage.learn(arena.out, knihovna.get_spell(arena.out, vstup)); mage.show_stats(arena.out); }
+				else if (icompare(vstup, "Shop")) write_items(arena.out, shop);
 				else if (icompare(vstup, "Buy")) { 
-					std::cin >> vstup; 
-					if		(icompare(vstup, "weapon")) { my_getline(std::cin, vstup); mage.buy_weapon(shop.get_weapon(vstup)); } // TODO: Vyjimky, pokud spatne napisu jmeno (kouzla + vsechny predmety)
+					arena.in >> vstup; 
+					if		(icompare(vstup, "weapon")) { my_getline(std::cin, vstup); mage.buy_weapon(arena.out, shop.get_weapon(arena.out, vstup)); } // TODO: Vyjimky, pokud spatne napisu jmeno (kouzla + vsechny predmety)
 					else if (icompare(vstup, "robe")) { 
 						my_getline(std::cin, vstup); 
-						mage.buy_robe(shop.get_robe(vstup));
+						mage.buy_robe(arena.out, shop.get_robe(arena.out, vstup));
 					}
-					else std::cout << "Neznamy typ predmetu: >>" << vstup << "<<" << std::endl;
-					mage.show_stats();
+					else arena.out << "Neznamy typ predmetu: >>" << vstup << "<<" << std::endl;
+					mage.show_stats(arena.out);
 				}
-				else std::cout << "Neznamy prikaz: >>" << vstup << "<<" << std::endl;
-				std::cin >> vstup;
+				else arena.out << "Neznamy prikaz: >>" << vstup << "<<" << std::endl;
+				arena.in >> vstup;
 			}
-			std::cin >> vstup;
+			arena.in >> vstup;
 			while (vstup != "1" && vstup != "2") {
-				std::cout << "Napis cislo tymu: ";
-				std::cin >> vstup;
+				arena.out << "Napis cislo tymu: ";
+				arena.in >> vstup;
 			}
 			team(arena, std::move(mage), std::stoi(vstup));
 		}
-		else std::cout << "Neznamy prikaz: >>" << vstup << "<<" << std::endl;
-		std::cin >> vstup;
+		else arena.out << "Neznamy prikaz: >>" << vstup << "<<" << std::endl;
+		arena.in >> vstup;
 	}
 	return arena;
 }

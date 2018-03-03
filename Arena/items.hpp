@@ -15,9 +15,9 @@ class item {
 public:
 	virtual ~item() {};
 	item(std::ifstream & ifs, std::string & name);
-	bool buy(Mage & mage);
+	bool buy(std::ostream & out, Mage & mage);
 	void sell(Mage & mage);
-	void show_stats() const;
+	void show_stats(std::ostream & out) const;
 	// get
 	const std::string & get_name() const { return name_; }
 	cislo get_price() const { return price_; }
@@ -65,11 +65,11 @@ public:
 	Shop & operator=(Shop &&) = default;
 	~Shop() = default;
 
-	weapon * get_weapon(const std::string & name);
-	robe * get_robe(const std::string & name);
+	weapon * get_weapon(std::ostream & out, const std::string & name);
+	robe * get_robe(std::ostream & out, const std::string & name);
 	// Vypis zbozi na cout
-	void show_weapons() const;
-	void show_robes() const;
+	void show_weapons(std::ostream & out) const;
+	void show_robes(std::ostream & out) const;
 private:
 	std::map<std::string, weapon> weapon_shop_;
 	std::map<std::string, robe> robes_shop_;

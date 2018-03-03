@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <random>
+#include <iostream>
 
 class Mage;
 
@@ -18,6 +19,8 @@ public:
 
 	std::default_random_engine generator; // TODO: Nahoda neni zatim nahodna
 	std::uniform_int_distribution<cislo> distribution{ 0, 100 };
+	std::ostream & out = std::cout;
+	std::istream & in = std::cin;
 private:
 	cislo time_;
 	team_container team1_;

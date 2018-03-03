@@ -18,7 +18,7 @@ public:
 	void cast( Arena * arena, Mage & caster, Mage & target) { cast_( arena, caster, target); } // Chci menit maga -> nekonstantni reference
 	void elemental_passive(Arena * arena, Mage & caster, Mage & target) { elemental_passive_(arena, caster, target); };
 	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
-	void show_spell() const;
+	void show_spell(std::ostream & out) const;
 	// get a set
 	std::string get_name() const { return name_; }
 	cislo get_damage() const { return damage_; }
@@ -79,8 +79,8 @@ struct Knihovna {
 	Knihovna & operator=(Knihovna &&) = default;
 	~Knihovna() = default;
 
-	Spell * get_spell(std::string spell) const;
-	void show_spells() const;
+	Spell * get_spell(std::ostream & out, std::string spell) const;
+	void show_spells(std::ostream & out) const;
 	//const MapKnihovna & get_spells() const { return Spells; }
 private:
 	MapKnihovna spells;
