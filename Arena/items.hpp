@@ -57,6 +57,14 @@ class robe: public item {
 struct Shop {
 public:
 	Shop(const std::string & file_name);
+
+	// Zakaz kopirovani a move
+	Shop(const Shop &) = delete;
+	Shop(Shop &&) = default;
+	Shop & operator=(const Shop &) = delete;
+	Shop & operator=(Shop &&) = default;
+	~Shop() = default;
+
 	weapon * get_weapon(const std::string & name);
 	robe * get_robe(const std::string & name);
 	// Vypis zbozi na cout

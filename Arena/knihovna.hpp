@@ -70,6 +70,14 @@ struct Knihovna {
 		spells["Flamestrike"] = std::make_unique<Fire_magic>(	"Flamestrike",	50,		100,	5,				false);
 		spells["Ice lance"] = std::make_unique<Ice_magic>(		"Ice lance",	30,		40,		1,				true);
 	}
+
+	// Zakaz kopirovani a move
+	Knihovna(const Knihovna &) = delete;
+	Knihovna(Knihovna &&) = default;
+	Knihovna & operator=(const Knihovna &) = delete;
+	Knihovna & operator=(Knihovna &&) = default;
+	~Knihovna() = default;
+
 	Spell * get_spell(std::string spell) const;
 	void show_spells() const;
 	//const MapKnihovna & get_spells() const { return Spells; }
