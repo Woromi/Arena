@@ -25,5 +25,3 @@ Po zakoupení pøedmìtu se jeho vlastnosti pøiètou k vlastnostem mága a mág si ulo
 
 Vytváøení mágù:
 Hráè vytváøí mága psaním rùzných pøíkazù (které mùže vypsat pøíkazem 'help') do konzole. Mage 'jmeno' vytvoøí nového mága, kterého následnì mùže vylepšovat a pøíkazem Team [12] ho zaøadí do jenoho z týmù v arénì. Nyní se k nemu už nemùže vrátit (do arény jsem ho pøesunul pomocí std::move), což není nejlepší øešení a je to námìt k vylepšení do budoucna.
-
-Nejsem si úplnì jistý, jeslti jsem použil správnì hlavièkové soubory, které jsme na pøednášce zatím probírali jen okrajovì. 

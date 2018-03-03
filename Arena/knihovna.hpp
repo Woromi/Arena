@@ -2,16 +2,13 @@
 #define knihovna_hpp
 
 #include "mage.hpp" // Je spravne includovat dva soubory navzajem? 
+#include "using_deklarace.hpp"
 
 #include <map>
 #include <string>
 #include <memory>
 
 class Mage;
-
-using cislo = int;
-
-enum spell_families { fire, ice, size };
 
 class Spell { // Primarne je mysleno jako kouzlo, ale je mozne pridat napr. tridu kouzel "jaderna fyzika" a jeji potomek napr. "neutronovy kanon"
 public:

@@ -8,18 +8,12 @@
 #include <vector>
 #include <map> // Jenom kvuli team_containeru
 
+// TODO: Potrebuju tam ty deklarace, kdyz jsem presunul using do samostatne hlavicky?
 // Dopredne deklarace
 class Spell; // Kvuli seznamu kouzel
 class Mage; // Kvuli team_containeru
 class weapon; // Kvuli nakupu predmetu
 class robe;
-
-// Kontejnery
-using cislo = int;
-using team_container = std::multimap<cislo, Mage>;
-using team_iterator = team_container::iterator;
-using kouzla_container = std::vector<Spell *>;
-using kouzla_const_iterator = kouzla_container::const_iterator;
 
 // Mage
 class Mage {
@@ -29,7 +23,7 @@ public:
 		mana_ = max_mana_;
 	};
 
-	void learn(Spell * spell);
+	void learn( Spell * spell);
 	void akce(team_container & enemy_team);
 	void naplanuj_kouzlo() { pristi_kouzlo_ = kouzla_.end(); } // Je nutne mit na to funkci, protoze kdybych to udelal v konstruktoru, vadilo by mu move (ukazoval by pak na spatny container)
 	void show_stats();

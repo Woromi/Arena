@@ -1,14 +1,13 @@
 #ifndef equipement_hpp
 #define equipement_hpp
 
-#include  "mage.hpp" // Vybaveni pri nakupu umi menit vlastnosti maga
+#include "mage.hpp" // Vybaveni pri nakupu umi menit vlastnosti maga
+#include "using_deklarace.hpp"
 
 #include <string>
 #include <map>
 #include <vector>
 #include <fstream>
-
-using cislo = int;
 
 class Mage;
 

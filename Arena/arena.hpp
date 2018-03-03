@@ -2,11 +2,9 @@
 #define arena_hpp
 
 #include "mage.hpp"
+#include "using_deklarace.hpp"
 
 #include <map>
-
-using team_container = std::multimap<cislo, Mage>;
-using team_iterator = team_container::iterator;
 
 class Arena {
 public:

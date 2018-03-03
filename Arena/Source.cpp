@@ -11,9 +11,6 @@ int main(int argc, char * * argv) {
 
 	//Arena arena = read_input(knihovna, shop);
 
-
-
-
 	// Vytvareni tymu bez cteni vstupu (jen pro testovani souboje)
 	Arena arena;
 	{	
