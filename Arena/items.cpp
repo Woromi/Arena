@@ -6,7 +6,7 @@
 #include <array>
 #include <string>
 
-bool item::buy(std::ostream & out, Mage & mage) {
+bool item::buy(std::ostream & out, Mage & mage) const {
 	if (mage.spend_money(price_)) {
 		
 		mage.add_health(health_);
@@ -29,7 +29,7 @@ bool item::buy(std::ostream & out, Mage & mage) {
 	}
 }
 
-void item::sell(Mage & mage) { // Predpokladam, ze to bude volat pouze mag, ktery ten predmet vlastni (kontroluje se to v Mage.sell_item())
+void item::sell(Mage & mage) const { // Predpokladam, ze to bude volat pouze mag, ktery ten predmet vlastni (kontroluje se to v Mage.sell_item())
 	mage.spend_money(-price_ / 2);
 
 	mage.set_max_health(mage.get_max_health() - health_);

@@ -15,8 +15,8 @@ class Spell { // Primarne je mysleno jako kouzlo, ale je mozne pridat napr. trid
 public:
 	virtual ~Spell() {};
 	Spell(std::string name, cislo damage, cislo cost, cislo casting_time, bool single_target) : name_{ name }, damage_{ damage }, cost_{ cost }, casting_time_{ casting_time }, single_target_{single_target} {};
-	void cast( Arena * arena, Mage & caster, Mage & target) { cast_( arena, caster, target); } // Chci menit maga -> nekonstantni reference
-	void elemental_passive(Arena * arena, Mage & caster, Mage & target) { elemental_passive_(arena, caster, target); };
+	void cast( Arena * arena, Mage & caster, Mage & target) const { cast_( arena, caster, target); } // Chci menit maga -> nekonstantni reference
+	void elemental_passive(Arena * arena, Mage & caster, Mage & target) const { elemental_passive_(arena, caster, target); };
 	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
 	void show_spell(std::ostream & out) const;
 	// get a set
@@ -32,8 +32,8 @@ protected:
 	cislo casting_time_;
 	bool single_target_;
 private:
-	virtual void cast_( Arena * arena, Mage & caster, Mage & target) {} // Chci menit maga -> nekonstantni reference
-	virtual void elemental_passive_(Arena * arena, Mage & caster, Mage & target) {};
+	virtual void cast_( Arena * arena, Mage & caster, Mage & target) const {} // Chci menit maga -> nekonstantni reference
+	virtual void elemental_passive_(Arena * arena, Mage & caster, Mage & target) const {};
 };
 
 // Ohniva magie
@@ -41,8 +41,8 @@ class Fire_magic : public Spell {
 public:
 	using Spell::Spell; // Konstruktor zdedeny od predka
 private:
-	virtual void elemental_passive_(Arena * arena, Mage & caster, Mage & target) override;	
-	virtual void cast_(Arena * arena, Mage & caster, Mage & target) override;
+	virtual void elemental_passive_(Arena * arena, Mage & caster, Mage & target) const override;	
+	virtual void cast_(Arena * arena, Mage & caster, Mage & target) const override;
 
 };
 
@@ -51,8 +51,8 @@ class Ice_magic : public Spell {
 public:
 	using Spell::Spell;
 private:
-	virtual void elemental_passive_(Arena * arena, Mage & caster, Mage & target) override;
-	virtual void cast_(Arena * arena, Mage & caster, Mage & target) override;
+	virtual void elemental_passive_(Arena * arena, Mage & caster, Mage & target) const override;
+	virtual void cast_(Arena * arena, Mage & caster, Mage & target) const override;
 };
 
 

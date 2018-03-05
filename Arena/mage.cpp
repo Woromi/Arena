@@ -4,7 +4,7 @@
 #include <iomanip> // setw
 
 
-void Mage::learn( std::ostream & out, Spell * spell) { 
+void Mage::learn( std::ostream & out, const Spell * spell) { 
 	if (spell != nullptr) {
 		kouzla_.emplace_back(spell);
 		out << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
@@ -83,7 +83,7 @@ void Mage::akce( Arena * arena, team_container & enemy_team) {
 
 
 // Nakupovani a prodavani predmetu
-void Mage::buy_weapon(std::ostream & out, weapon * new_weapon) {
+void Mage::buy_weapon(std::ostream & out, const weapon * new_weapon) {
 	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy(out, *this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
 	{
 		weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
@@ -100,7 +100,7 @@ void Mage::sell_weapon(std::ostream & out) {
 	}
 }
 
-void Mage::buy_robe(std::ostream & out, robe * new_robe) {
+void Mage::buy_robe(std::ostream & out, const robe * new_robe) {
 	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy(out, *this)) // Kopirovani je castym zdrojem chyb
 	{
 		robe_ = new_robe;

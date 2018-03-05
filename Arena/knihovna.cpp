@@ -55,7 +55,7 @@ void Knihovna::show_spells(std::ostream & out) const {
 
 
 // Ohniva magie
-void Fire_magic::elemental_passive_(Arena * arena, Mage & caster, Mage & target) {
+void Fire_magic::elemental_passive_(Arena * arena, Mage & caster, Mage & target) const {
 	if (arena->distribution(arena->generator) < 25) {// 25% sance, ze se mag sam zapali a da si desetinu dmg
 		caster.set_burn(3);
 		arena->out << caster.get_name() << " podpalil sam sebe." << std::endl;
@@ -66,7 +66,7 @@ void Fire_magic::elemental_passive_(Arena * arena, Mage & caster, Mage & target)
 	}
 }; 
 
-void Fire_magic::cast_( Arena * arena, Mage & caster, Mage & target) { 
+void Fire_magic::cast_( Arena * arena, Mage & caster, Mage & target) const { 
 	cislo calculated_dmg = calculate_damage(caster, target, spell_families::fire);
 	report(arena->out, name_, caster.get_name(), target.get_name(), calculated_dmg);
 	target.add_health(-calculated_dmg);
@@ -78,7 +78,7 @@ void Fire_magic::cast_( Arena * arena, Mage & caster, Mage & target) {
 
 
 // Ledova magie
-void Ice_magic::elemental_passive_(Arena * arena, Mage & caster, Mage & target) {
+void Ice_magic::elemental_passive_(Arena * arena, Mage & caster, Mage & target) const {
 	if (arena->distribution(arena->generator) < 50) {
 		caster.set_frozen();
 		arena->out << caster.get_name() << " se zmrazil a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
@@ -89,7 +89,7 @@ void Ice_magic::elemental_passive_(Arena * arena, Mage & caster, Mage & target) 
 	}
 }
 
-void Ice_magic::cast_( Arena * arena, Mage & caster, Mage & target) {
+void Ice_magic::cast_( Arena * arena, Mage & caster, Mage & target) const {
 	cislo calculated_damage = calculate_damage(caster, target, spell_families::ice);
 	report(arena->out, name_, caster.get_name(), target.get_name(), calculated_damage);
 	target.add_health(-calculated_damage);

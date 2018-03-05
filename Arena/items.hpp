@@ -15,8 +15,8 @@ class item {
 public:
 	virtual ~item() {};
 	item(std::ifstream & ifs, std::string & name);
-	bool buy(std::ostream & out, Mage & mage);
-	void sell(Mage & mage);
+	bool buy(std::ostream & out, Mage & mage) const;
+	void sell(Mage & mage) const;
 	void show_stats(std::ostream & out) const;
 	// get
 	const std::string & get_name() const { return name_; }

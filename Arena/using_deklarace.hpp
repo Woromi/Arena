@@ -22,7 +22,7 @@ class Mage; // Kvuli team_containeru
 class weapon; // Kvuli nakupu predmetu
 class robe;
 
-using kouzla_container = std::vector< Spell *>;
+using kouzla_container = std::vector< const Spell *>;
 using kouzla_const_iterator = kouzla_container::const_iterator;
 
 #endif // !using_deklarace_hpp
