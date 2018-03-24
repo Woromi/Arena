@@ -31,10 +31,10 @@ public:
 	Mage & operator=(Mage &&) = default;
 	~Mage() = default;
 
-	void learn(Spell * spell);
+	void learn(std::ostream & out, const Spell * spell);
 	void akce(Arena * arena, team_container & enemy_team);
 	void naplanuj_kouzlo() { pristi_kouzlo_ = kouzla_.end(); } // Je nutne mit na to funkci, protoze kdybych to udelal v konstruktoru, vadilo by mu move (ukazoval by pak na spatny container)
-	void show_stats();
+	void show_stats(std::ostream & out);
 
 	// get a set
 	// Health
@@ -71,14 +71,14 @@ public:
 	void set_burn(cislo pocet_kol) { burn_ = pocet_kol; }
 
 	// buy a sell
-	void buy_weapon(weapon * new_weapon);
-	void sell_weapon();
-	void buy_robe(robe * new_robe);
-	void sell_robe();
+	void buy_weapon(std::ostream & out, const weapon * new_weapon);
+	void sell_weapon(std::ostream & out);
+	void buy_robe(std::ostream & out, const robe * new_robe);
+	void sell_robe(std::ostream & out);
 
 	// Pouze na prohlizeni
-	weapon * get_weapon() const { return weapon_; }
-	robe * get_robe() const { return robe_; }
+	const weapon * get_weapon() const { return weapon_; }
+	const robe * get_robe() const { return robe_; }
 private:
 	// Jmeno
 	std::string name_;
@@ -102,8 +102,8 @@ private:
 	kouzla_container kouzla_;
 	kouzla_const_iterator pristi_kouzlo_;
 	// Equipement
-	weapon * weapon_;
-	robe * robe_;
+	const weapon * weapon_; // TODO: Je const na spravnem miste?
+	const robe * robe_;
 };
 
 #endif // !mage_hpp

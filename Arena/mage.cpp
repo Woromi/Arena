@@ -4,31 +4,28 @@
 #include <iomanip> // setw
 
 
-void Mage::learn( Spell * spell) { 
+void Mage::learn( std::ostream & out, const Spell * spell) { 
 	if (spell != nullptr) {
 		kouzla_.emplace_back(spell);
-		std::cout << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
+		out << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
 	}
 }
 
-void Mage::show_stats() {
-	std::cout
-		<< name_ << std::endl
+void Mage::show_stats(std::ostream & out) {
+	out << name_ << std::endl
 		// Spells
 		<< std::setw(20) << "Spells:" << std::endl;
-	for (auto && k : kouzla_) k->show_spell();
+	for (auto && k : kouzla_) k->show_spell(out);
 	// Items
-	std::cout
-		<< std::setw(20) << "Items:" << std::endl
+	out << std::setw(20) << "Items:" << std::endl
 		<< std::setw(25) << "Weapon: ";
-	if (weapon_ != nullptr)weapon_->show_stats();
-	else std::cout << "No weapon" << std::endl;
-	std::cout
-		<< std::setw(25) << "Robe: ";
-	if (robe_ != nullptr) robe_->show_stats();
-	else std::cout << "No robe" << std::endl;
+	if (weapon_ != nullptr)weapon_->show_stats(out);
+	else out << "No weapon" << std::endl;
+	out << std::setw(25) << "Robe: ";
+	if (robe_ != nullptr) robe_->show_stats(out);
+	else out << "No robe" << std::endl;
 	// Stats
-	std::cout // TODO: Predelat staty do pole indexovaneho enum
+	out // TODO: Predelat staty do pole indexovaneho enum
 		<< "Health: " << health_ << std::endl
 		<< "Health regen: " << health_regen_ << std::endl
 		<< "Mana: " << mana_ << std::endl
@@ -86,36 +83,36 @@ void Mage::akce( Arena * arena, team_container & enemy_team) {
 
 
 // Nakupovani a prodavani predmetu
-void Mage::buy_weapon(weapon * new_weapon) {
-	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy(*this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
+void Mage::buy_weapon(std::ostream & out, const weapon * new_weapon) {
+	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy(out, *this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
 	{
 		weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
-		std::cout << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
+		out << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
 	}
 }
 
-void Mage::sell_weapon() {
+void Mage::sell_weapon(std::ostream & out) {
 	if (weapon_ != nullptr) // Pokud ma nejakou zbran, prodej ji
 	{
 		weapon_->sell(*this);
-		std::cout << this->name_ << " prodal " << weapon_->get_name() << std::endl;
+		out << this->name_ << " prodal " << weapon_->get_name() << std::endl;
 		weapon_ = nullptr;
 	}
 }
 
-void Mage::buy_robe(robe * new_robe) {
-	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy(*this)) // Kopirovani je castym zdrojem chyb
+void Mage::buy_robe(std::ostream & out, const robe * new_robe) {
+	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy(out, *this)) // Kopirovani je castym zdrojem chyb
 	{
 		robe_ = new_robe;
-		std::cout << this->name_ << " si koupil " << robe_->get_name() << std::endl;
+		out << this->name_ << " si koupil " << robe_->get_name() << std::endl;
 	}
 }
 
-void Mage::sell_robe() {
+void Mage::sell_robe(std::ostream & out) {
 	if (robe_ != nullptr)
 	{
 		robe_->sell(*this);
-		std::cout << this->name_ << " prodal " << robe_->get_name() << std::endl;		
+		out << this->name_ << " prodal " << robe_->get_name() << std::endl;		
 		robe_ = nullptr;
 	}
 }

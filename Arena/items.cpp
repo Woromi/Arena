@@ -1,12 +1,12 @@
 #include "items.hpp"
 
 #include <fstream> // ifstream
-#include <iostream> // cout
+#include <iostream>
 #include <iomanip> // setw
 #include <array>
 #include <string>
 
-bool item::buy(Mage & mage) {
+bool item::buy(std::ostream & out, Mage & mage) const {
 	if (mage.spend_money(price_)) {
 		
 		mage.add_health(health_);
@@ -24,12 +24,12 @@ bool item::buy(Mage & mage) {
 		return true;
 	}
 	else {
-		std::cout << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl;
+		out << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl;
 		return false;
 	}
 }
 
-void item::sell(Mage & mage) { // Predpokladam, ze to bude volat pouze mag, ktery ten predmet vlastni (kontroluje se to v Mage.sell_item())
+void item::sell(Mage & mage) const { // Predpokladam, ze to bude volat pouze mag, ktery ten predmet vlastni (kontroluje se to v Mage.sell_item())
 	mage.spend_money(-price_ / 2);
 
 	mage.set_max_health(mage.get_max_health() - health_);
@@ -99,68 +99,65 @@ Shop::Shop(const std::string & file_name) {
 
 
 // Vypis zbozi obchodu
-void item::show_stats() const {
-	std::cout
+void item::show_stats(std::ostream & out) const {
+	out
 		<< std::setw(30) << name_
 		<< std::setw(15) << health_
 		<< std::setw(15) << health_regen_
 		<< std::setw(15) << mana_
 		<< std::setw(15) << mana_regen_;
 	for (std::uint16_t i = 0; i < resistance_.size(); ++i)
-		std::cout << std::setw(15) << resistance_[i];
-	std::cout
-		<< std::setw(15) << spell_power_
+		out << std::setw(15) << resistance_[i];
+	out << std::setw(15) << spell_power_
 		<< std::setw(20) << price_
 		<< std::endl;
 }
 
-void show_headline() {
+void show_headline(std::ostream & out) {
 	std::array<std::string, spell_families::size + 1> elements{ "Fire", "Ice", "Dodefinuj me" };
-	std::cout
-		<< std::setw(30) << "Name"
+	out << std::setw(30) << "Name"
 		<< std::setw(15) << "Health"
 		<< std::setw(15) << "Health regen"
 		<< std::setw(15) << "Mana"
 		<< std::setw(15) << "Mana regen";
 	for (std::uint16_t i = 0; i < spell_families::size; ++i) {
-		std::cout << std::setw(8)
+		out << std::setw(8)
 			<< elements[i] << " resist";
 	}
-	std::cout
-		<< std::setw(15) << "Spell power"
+	out	<< std::setw(15) << "Spell power"
 		<< std::setw(20) << "Price"
 		<< std::endl;
 }
 
-void Shop::show_weapons() const {
-	std::cout << "Weapons:" << std::endl;
-	show_headline();
+void Shop::show_weapons(std::ostream & out) const {
+	out << "Weapons:" << std::endl;
+	show_headline(out);
 	for (auto && item : weapon_shop_) {
-		item.second.show_stats();
+		item.second.show_stats(out);
 	}
 }
 
-void Shop::show_robes() const {
-	std::cout << "Robes:" << std::endl;
-	show_headline();
+void Shop::show_robes(std::ostream & out) const {
+	out << "Robes:" << std::endl;
+	show_headline(out);
 	for (auto && item : robes_shop_) {
-		item.second.show_stats();
+		item.second.show_stats(out);
 	}
 }
 
-weapon * Shop::get_weapon(const std::string & name) { 
+weapon * Shop::get_weapon(std::ostream & out, const std::string & name) { 
 	if (weapon_shop_.find(name) != weapon_shop_.end())
 		return &weapon_shop_.at(name);
 	else 
-		std::cout << "Zbran s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+		out << "Zbran s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
 	return nullptr;
 }
 
 
-robe * Shop::get_robe(const std::string & name) { 
+robe * Shop::get_robe(std::ostream & out, const std::string & name) { 
 	if (robes_shop_.find(name) != robes_shop_.end())
 		return &robes_shop_.at(name);
 	else
-		std::cout << "Roba s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+		out << "Roba s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
 	return nullptr;
 }
