@@ -1,31 +1,32 @@
 #include "mage.hpp"
+#include "arena.hpp" // TODO: Je dobre includovat v cpp souborech?
 
 #include <iostream>
 #include <iomanip> // setw
 
 
-void Mage::learn( std::ostream & out, const Spell * spell) { 
+void Mage::learn( const Spell * spell) { 
 	if (spell != nullptr) {
 		kouzla_.emplace_back(spell);
-		out << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
+		arena_.out << name_ << " se naucil pouzivat " << spell->get_name() << std::endl;
 	}
 }
 
-void Mage::show_stats(std::ostream & out) {
-	out << name_ << std::endl
+void Mage::show_stats() {
+	arena_.out << name_ << std::endl
 		// Spells
 		<< std::setw(20) << "Spells:" << std::endl;
-	for (auto && k : kouzla_) k->show_spell(out);
+	for (auto && k : kouzla_) k->show_spell();
 	// Items
-	out << std::setw(20) << "Items:" << std::endl
+	arena_.out << std::setw(20) << "Items:" << std::endl
 		<< std::setw(25) << "Weapon: ";
-	if (weapon_ != nullptr)weapon_->show_stats(out);
-	else out << "No weapon" << std::endl;
-	out << std::setw(25) << "Robe: ";
-	if (robe_ != nullptr) robe_->show_stats(out);
-	else out << "No robe" << std::endl;
+	if (weapon_ != nullptr)weapon_->show_stats();
+	else arena_.out << "No weapon" << std::endl;
+	arena_.out << std::setw(25) << "Robe: ";
+	if (robe_ != nullptr) robe_->show_stats();
+	else arena_.out << "No robe" << std::endl;
 	// Stats
-	out // TODO: Predelat staty do pole indexovaneho enum
+	arena_.out // TODO: Predelat staty do pole indexovaneho enum
 		<< "Health: " << health_ << std::endl
 		<< "Health regen: " << health_regen_ << std::endl
 		<< "Mana: " << mana_ << std::endl
@@ -33,7 +34,7 @@ void Mage::show_stats(std::ostream & out) {
 		<< "Spell power: " << spell_power_ << std::endl;
 }
 
-void Mage::akce( Arena * arena, team_container & enemy_team) {
+void Mage::akce( team_container & enemy_team) {
 	// Regenerace
 	health_ += health_regen_;
 	if (health_ > max_health_) health_ = max_health_;
@@ -64,12 +65,12 @@ void Mage::akce( Arena * arena, team_container & enemy_team) {
 			if ((**pristi_kouzlo_).single_target()) {
 				team_iterator target = enemy_team.begin();
 				(**pristi_kouzlo_).calculate_damage(*this, *(target->second), spell_families::fire);
-				(**pristi_kouzlo_).cast(arena, *this, *(target->second));
+				(**pristi_kouzlo_).cast( *this, *(target->second));
 			}
 			// Jinak ho pouzij na vsechny
 			else { 
 				for (auto it = enemy_team.begin(); it != enemy_team.end(); ++it) {
-					(**pristi_kouzlo_).cast(arena, *this, *(it->second));
+					(**pristi_kouzlo_).cast( *this, *(it->second));
 				}
 			}
 
@@ -83,36 +84,36 @@ void Mage::akce( Arena * arena, team_container & enemy_team) {
 
 
 // Nakupovani a prodavani predmetu
-void Mage::buy_weapon(std::ostream & out, const weapon * new_weapon) {
-	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy(out, *this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
+void Mage::buy_weapon( const weapon * new_weapon) {
+	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy( *this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
 	{
 		weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
-		out << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
+		arena_.out << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
 	}
 }
 
-void Mage::sell_weapon(std::ostream & out) {
+void Mage::sell_weapon() {
 	if (weapon_ != nullptr) // Pokud ma nejakou zbran, prodej ji
 	{
 		weapon_->sell(*this);
-		out << this->name_ << " prodal " << weapon_->get_name() << std::endl;
+		arena_.out << this->name_ << " prodal " << weapon_->get_name() << std::endl;
 		weapon_ = nullptr;
 	}
 }
 
-void Mage::buy_robe(std::ostream & out, const robe * new_robe) {
-	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy(out, *this)) // Kopirovani je castym zdrojem chyb
+void Mage::buy_robe(const robe * new_robe) {
+	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy( *this)) // Kopirovani je castym zdrojem chyb
 	{
 		robe_ = new_robe;
-		out << this->name_ << " si koupil " << robe_->get_name() << std::endl;
+		arena_.out << this->name_ << " si koupil " << robe_->get_name() << std::endl;
 	}
 }
 
-void Mage::sell_robe(std::ostream & out) {
+void Mage::sell_robe() {
 	if (robe_ != nullptr)
 	{
 		robe_->sell(*this);
-		out << this->name_ << " prodal " << robe_->get_name() << std::endl;		
+		arena_.out << this->name_ << " prodal " << robe_->get_name() << std::endl;
 		robe_ = nullptr;
 	}
 }

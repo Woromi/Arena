@@ -3,6 +3,6 @@
 
 #include "arena.hpp"
 
-Arena read_input( Knihovna & knihovna, Shop & shop);
+void read_input( Arena & arena, Knihovna & knihovna, Shop & shop);
 
 #endif // !read_input_hpp

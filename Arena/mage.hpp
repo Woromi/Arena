@@ -18,7 +18,7 @@ class Arena;
 // Mage
 class Mage {
 public:
-	Mage(std::string name) : name_{ name }, money_{ 1000 }, max_health_{ 500 }, health_regen_{ 5 }, max_mana_{ 500 }, mana_regen_{ 10 } {
+	Mage(std::string name, const Arena & arena) : name_{ name }, arena_{arena}, money_{ 1000 }, max_health_{ 500 }, health_regen_{ 5 }, max_mana_{ 500 }, mana_regen_{ 10 } {
 		resistance_.resize(spell_families::size);
 		health_ = max_health_;
 		mana_ = max_mana_;
@@ -31,10 +31,10 @@ public:
 	Mage & operator=(Mage &&) = default;
 	~Mage() = default;
 
-	void learn(std::ostream & out, const Spell * spell);
-	void akce(Arena * arena, team_container & enemy_team);
+	void learn( const Spell * spell);
+	void akce( team_container & enemy_team);
 	void naplanuj_kouzlo() { pristi_kouzlo_ = kouzla_.end(); } // Je nutne mit na to funkci, protoze kdybych to udelal v konstruktoru, vadilo by mu move (ukazoval by pak na spatny container)
-	void show_stats(std::ostream & out);
+	void show_stats();
 
 	// get a set
 	// Health
@@ -71,15 +71,16 @@ public:
 	void set_burn(cislo pocet_kol) { burn_ = pocet_kol; }
 
 	// buy a sell
-	void buy_weapon(std::ostream & out, const weapon * new_weapon);
-	void sell_weapon(std::ostream & out);
-	void buy_robe(std::ostream & out, const robe * new_robe);
-	void sell_robe(std::ostream & out);
+	void buy_weapon( const weapon * new_weapon);
+	void sell_weapon();
+	void buy_robe(const robe * new_robe);
+	void sell_robe();
 
 	// Pouze na prohlizeni
 	const weapon * get_weapon() const { return weapon_; }
 	const robe * get_robe() const { return robe_; }
 private:
+	const Arena & arena_;
 	// Jmeno
 	std::string name_;
 	cislo money_;

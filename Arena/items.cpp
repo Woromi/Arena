@@ -1,4 +1,5 @@
 #include "items.hpp"
+#include "arena.hpp" // TODO: Je dobre to includovat v cpp souborech?
 
 #include <fstream> // ifstream
 #include <iostream>
@@ -6,7 +7,7 @@
 #include <array>
 #include <string>
 
-bool item::buy(std::ostream & out, Mage & mage) const {
+bool item::buy( Mage & mage) const {
 	if (mage.spend_money(price_)) {
 		
 		mage.add_health(health_);
@@ -24,7 +25,7 @@ bool item::buy(std::ostream & out, Mage & mage) const {
 		return true;
 	}
 	else {
-		out << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl;
+		arena_.out << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl;
 		return false;
 	}
 }
@@ -45,9 +46,9 @@ void item::sell(Mage & mage) const { // Predpokladam, ze to bude volat pouze mag
 }
 
 // Cteni vlastnosti vybaveni ze souboru
-item::item(std::ifstream & ifs, std::string & name) : name_{ name }, health_{ 0 }, health_regen_{ 0 },
-																  mana_{ 0 }, mana_regen_{ 0 },
-																  spell_power_{ 0 } {
+item::item( const Arena & arena, std::istream & ifs, std::string & name) : arena_{arena}, name_ { name }, health_{ 0 }, health_regen_{ 0 },
+														mana_{ 0 }, mana_regen_{ 0 },
+														spell_power_{ 0 } {
 	resistance_.resize(spell_families::size, 0);
 	std::string attribute;
 	std::string value;
@@ -63,13 +64,13 @@ item::item(std::ifstream & ifs, std::string & name) : name_{ name }, health_{ 0 
 		else if (attribute == "ice_resistance") resistance_[spell_families::ice] = std::stoi(value);
 		else if (attribute == "spell_power") spell_power_ = std::stoi(value);
 		else { throw std::exception("Takova vlastnost neexistuje."); }
-		std::getline(ifs, attribute, '=');		
+		std::getline(ifs, attribute, '=');
 		std::getline(ifs, value);
 		}
 }
 
 // Nacti svoje zbozi ze souboru
-Shop::Shop(const std::string & file_name) {
+Shop::Shop(const Arena & arena, const std::string & file_name) : arena_{arena} {
 	std::ifstream ifs{ file_name };
 	std::string line;
 	while (ifs.good()) // TODO: Vymyslet sem lepsi podminku
@@ -81,7 +82,7 @@ Shop::Shop(const std::string & file_name) {
 			getline(ifs, line);
 			while (line != "") { // Dokud nenarazis na prazdnou radku
 				std::string name = line;
-				weapon_shop_.emplace(name, weapon{ ifs, name }); // Precte vsechny radky s vlastnostma a jeden prazdny potom (aby vedel kdy ma skoncit)
+				weapon_shop_.emplace(name, weapon{ arena_, ifs, name }); // Precte vsechny radky s vlastnostma a jeden prazdny potom (aby vedel kdy ma skoncit)
 				getline(ifs, line);
 			}
 		}
@@ -89,7 +90,7 @@ Shop::Shop(const std::string & file_name) {
 			getline(ifs, line);
 			while (line != "") { // Dokud nenarazis na prazdnou radku
 				std::string name = line;
-				robes_shop_.emplace(name, robe{ ifs, name });
+				robes_shop_.emplace(name, robe{ arena_, ifs, name });
 				getline(ifs, line);
 			}
 		}
@@ -99,16 +100,16 @@ Shop::Shop(const std::string & file_name) {
 
 
 // Vypis zbozi obchodu
-void item::show_stats(std::ostream & out) const {
-	out
+void item::show_stats() const {
+	arena_.out
 		<< std::setw(30) << name_
 		<< std::setw(15) << health_
 		<< std::setw(15) << health_regen_
 		<< std::setw(15) << mana_
 		<< std::setw(15) << mana_regen_;
 	for (std::uint16_t i = 0; i < resistance_.size(); ++i)
-		out << std::setw(15) << resistance_[i];
-	out << std::setw(15) << spell_power_
+		arena_.out << std::setw(15) << resistance_[i];
+	arena_.out << std::setw(15) << spell_power_
 		<< std::setw(20) << price_
 		<< std::endl;
 }
@@ -124,40 +125,40 @@ void show_headline(std::ostream & out) {
 		out << std::setw(8)
 			<< elements[i] << " resist";
 	}
-	out	<< std::setw(15) << "Spell power"
+	out << std::setw(15) << "Spell power"
 		<< std::setw(20) << "Price"
 		<< std::endl;
 }
 
-void Shop::show_weapons(std::ostream & out) const {
-	out << "Weapons:" << std::endl;
-	show_headline(out);
+void Shop::show_weapons() const {
+	arena_.out << "Weapons:" << std::endl;
+	show_headline(arena_.out);
 	for (auto && item : weapon_shop_) {
-		item.second.show_stats(out);
+		item.second.show_stats();
 	}
 }
 
-void Shop::show_robes(std::ostream & out) const {
-	out << "Robes:" << std::endl;
-	show_headline(out);
+void Shop::show_robes() const {
+	arena_.out << "Robes:" << std::endl;
+	show_headline(arena_.out);
 	for (auto && item : robes_shop_) {
-		item.second.show_stats(out);
+		item.second.show_stats();
 	}
 }
 
-weapon * Shop::get_weapon(std::ostream & out, const std::string & name) { 
+weapon * Shop::get_weapon( const std::string & name) { 
 	if (weapon_shop_.find(name) != weapon_shop_.end())
 		return &weapon_shop_.at(name);
 	else 
-		out << "Zbran s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+		arena_.out << "Zbran s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
 	return nullptr;
 }
 
 
-robe * Shop::get_robe(std::ostream & out, const std::string & name) { 
+robe * Shop::get_robe(const std::string & name) { 
 	if (robes_shop_.find(name) != robes_shop_.end())
 		return &robes_shop_.at(name);
 	else
-		out << "Roba s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+		arena_.out << "Roba s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
 	return nullptr;
 }

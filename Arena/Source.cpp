@@ -2,29 +2,28 @@
 #include "read_input.hpp"
 #include "items.hpp"
 #include "knihovna.hpp"
-
 #include <string>
 
 int main(int argc, char * * argv) {
-	Knihovna knihovna;
-	Shop shop{ "items.txt" }; // Nacti vybaveni ze souboru
+	Arena arena;
+	Knihovna knihovna{arena};
+	Shop shop{ arena, "items.txt" }; // Nacti vybaveni ze souboru
 
-	//Arena arena = read_input(knihovna, shop);
+	// read_input(arena, knihovna, shop);
 
 	// Vytvareni tymu bez cteni vstupu (jen pro testovani souboje)
-	Arena arena;
 	{	
-		Mage Plosnak{ "Plosnak" };
-		Mage Plosnak2{ "Plosnak2" };
-		Mage Dummy1{ "Dummy1" };
-		Mage Dummy2{ "Dummy2" };
-		Plosnak.learn(arena.out, knihovna.get_spell(arena.out, "Flamestrike"));
-		Plosnak2.learn(arena.out, knihovna.get_spell(arena.out, "Flamestrike"));
-		Dummy2.learn(arena.out, knihovna.get_spell(arena.out, "Ice lance"));
+		Mage Plosnak{ "Plosnak", arena };
+		Mage Plosnak2{ "Plosnak2", arena };
+		Mage Dummy1{ "Dummy1", arena };
+		Mage Dummy2{ "Dummy2", arena };
+		Plosnak.learn(knihovna.get_spell("Flamestrike"));
+		Plosnak2.learn(knihovna.get_spell("Flamestrike"));
+		Dummy2.learn(knihovna.get_spell("Ice lance"));
 
-		Plosnak.buy_weapon(arena.out, shop.get_weapon(arena.out, "Wooden staff of flames"));
-		Plosnak.buy_robe(arena.out, shop.get_robe(arena.out, "Heavy armored robe"));
-		Dummy1.buy_robe(arena.out, shop.get_robe(arena.out, "Robe of fire resistance"));
+		Plosnak.buy_weapon(shop.get_weapon("Wooden staff of flames"));
+		Plosnak.buy_robe(shop.get_robe("Heavy armored robe"));
+		Dummy1.buy_robe(shop.get_robe("Robe of fire resistance"));
 
 		arena.team1_add(std::move(Plosnak));
 		arena.team1_add(std::move(Plosnak2));
@@ -33,4 +32,4 @@ int main(int argc, char * * argv) {
 	}//*/
 
 	arena.souboj();
-}
+ }

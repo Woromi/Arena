@@ -10,14 +10,15 @@
 #include <fstream>
 
 class Mage;
+class Arena;
 
 class item {
 public:
 	virtual ~item() {};
-	item(std::ifstream & ifs, std::string & name);
-	bool buy(std::ostream & out, Mage & mage) const;
+	item(const Arena & arena, std::istream & ifs, std::string & name);
+	bool buy( Mage & mage) const;
 	void sell(Mage & mage) const;
-	void show_stats(std::ostream & out) const;
+	void show_stats() const;
 	// get
 	const std::string & get_name() const { return name_; }
 	cislo get_price() const { return price_; }
@@ -28,6 +29,7 @@ public:
 	const std::vector<cislo> & get_resistance() const { return resistance_; }
 	cislo get_spell_power() const { return spell_power_; }
 protected:
+	const Arena & arena_;
 	std::string name_;
 	cislo price_;
 
@@ -56,7 +58,7 @@ class robe: public item {
 
 struct Shop {
 public:
-	Shop(const std::string & file_name);
+	Shop( const Arena & arena, const std::string & file_name);
 
 	// Zakaz kopirovani a move
 	Shop(const Shop &) = delete;
@@ -65,12 +67,13 @@ public:
 	Shop & operator=(Shop &&) = default;
 	~Shop() = default;
 
-	weapon * get_weapon(std::ostream & out, const std::string & name);
-	robe * get_robe(std::ostream & out, const std::string & name);
+	weapon * get_weapon( const std::string & name);
+	robe * get_robe( const std::string & name);
 	// Vypis zbozi na cout
-	void show_weapons(std::ostream & out) const;
-	void show_robes(std::ostream & out) const;
+	void show_weapons() const;
+	void show_robes() const;
 private:
+	const Arena & arena_;
 	std::map<std::string, weapon> weapon_shop_;
 	std::map<std::string, robe> robes_shop_;
 };
