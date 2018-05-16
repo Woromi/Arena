@@ -7,13 +7,18 @@ bool aktualizuj_hp(std::ostream & out, team_container & team, team_iterator & ta
 	cislo old_health = target->first;
 	cislo new_health = (*target->second).get_health();
 	bool zmena = new_health != old_health;
-	if (zmena) { // TODO: Vymyslet to lepe - ted ma vyhodu zacinajici tym
-		auto mag = std::move(target->second);
-		team.erase(target);
-		if (new_health > 0) // Pokud mag stale jeste zije
-			team.emplace(new_health, std::move(mag));
-		else
-			out << (*mag).get_name() << " umrel" << std::endl;
+	if (zmena) {
+		// Aktualizuj HP (c++17)
+		if (new_health > 0) {
+			auto node = team.extract(target);
+			node.key() = new_health;
+			team.insert(std::move(node));
+		}
+		// Pokud umrel, odstran ho ze seznamu
+		else {
+			out << target->second->get_name() << " umrel" << std::endl;
+			team.erase(target);
+		}
 	}
 	return zmena;
 }

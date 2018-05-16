@@ -1,5 +1,5 @@
 #include "mage.hpp"
-#include "arena.hpp" // TODO: Je dobre includovat v cpp souborech?
+#include "arena.hpp"
 
 #include <iostream>
 #include <iomanip> // setw
@@ -33,7 +33,7 @@ void Mage::show_stats() {
 	if (robe_ != nullptr) robe_->show_stats();
 	else arena_.out << "No robe" << std::endl;
 	// Stats
-	arena_.out // TODO: Predelat staty do pole indexovaneho enum
+	arena_.out 
 		<< std::setw(odsazeni1) << "" << "Health: " << health_ << std::endl
 		<< std::setw(odsazeni1) << "" << "Health regen: " << health_regen_ << std::endl
 		<< std::setw(odsazeni1) << "" << "Mana: " << mana_ << std::endl

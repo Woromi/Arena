@@ -45,7 +45,7 @@ protected:
 
 class weapon : public item {
 	using item::item;
-}; // TODO: Ma vytvoreni "zbytecneho" potomka nejake nevyhody?
+};
 
 class robe: public item {
 	using item::item;

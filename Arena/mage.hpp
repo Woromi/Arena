@@ -8,13 +8,6 @@
 #include <vector>
 #include <map> // Jenom kvuli team_containeru
 
-// TODO: Potrebuju tam ty deklarace, kdyz jsem presunul using do samostatne hlavicky?
-// Dopredne deklarace
-class Spell; 
-class weapon;
-class robe;
-class Arena;
-
 // Mage
 class Mage {
 public:
@@ -104,7 +97,7 @@ private:
 	kouzla_container kouzla_;
 	kouzla_const_iterator pristi_kouzlo_;
 	// Equipement
-	const weapon * weapon_; // TODO: Je const na spravnem miste?
+	const weapon * weapon_;
 	const robe * robe_;
 };
 

@@ -68,9 +68,9 @@ using MapKnihovna = std::map<std::string, PtrSpell>;
 // Knihovna - jsou v ni ulozeny vsechny spelly. Hrac, ktery se nauci kouzlo se nauci jenom odkaz do teto knihovny
 struct Knihovna {
 	Knihovna(Arena & arena) : arena_{ arena } {			//		Name			Damage	Cost	Casting_time	Single_target
-		spells["Fireball"] = std::make_unique<Fire_magic>(		"Fireball",		100,	90,		5,				true,			arena_);
-		spells["Flamestrike"] = std::make_unique<Fire_magic>(	"Flamestrike",	50,		100,	5,				false,			arena_);
-		spells["Ice lance"] = std::make_unique<Ice_magic>(		"Ice lance",	30,		40,		1,				true,			arena_);
+		spells["Fireball"] = std::make_unique<Fire_magic>(		"Fireball",		1000,	90,		5,				true,			arena_);
+		spells["Flamestrike"] = std::make_unique<Fire_magic>(	"Flamestrike",	500,	100,	5,				false,			arena_);
+		spells["Ice lance"] = std::make_unique<Ice_magic>(		"Ice lance",	300,	40,		1,				true,			arena_);
 	}
 
 	// Zakaz kopirovani a move

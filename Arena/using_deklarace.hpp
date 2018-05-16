@@ -14,7 +14,7 @@ using team_container = std::multimap<cislo, std::shared_ptr<Mage>>; // Shared_pt
 using team_iterator = team_container::iterator;
 
 // Knihovna
-enum spell_families { fire, ice, size }; // TODO: Opravit chyby z doby, kdy jsem neumel dat tohle do hlavickoveho souboru
+enum spell_families { fire, ice, size };
 
 // Mage
 class Spell; // Kvuli seznamu kouzel

@@ -14,18 +14,18 @@ fire_resistance=10
 robes
 Robe
 price=100
-health=5000
+health=500
 health_regen=5
 ice_resistance=5
 =
 Heavy armored robe
 price=500
-health=20000
+health=2000
 fire_resistance=25
 ice_resistance=25
 =
 Robe of fire resistance
 price=500
-health=10000
+health=1000
 fire_resistance=50
 =

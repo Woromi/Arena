@@ -1,5 +1,5 @@
 #include "items.hpp"
-#include "arena.hpp" // TODO: Je dobre to includovat v cpp souborech?
+#include "arena.hpp"
 
 #include <fstream> // ifstream
 #include <iostream>
@@ -73,7 +73,7 @@ item::item( const Arena & arena, std::istream & ifs, std::string & name) : arena
 Shop::Shop(const Arena & arena, const std::string & file_name) : arena_{arena} {
 	std::ifstream ifs{ file_name };
 	std::string line;
-	while (ifs.good()) // TODO: Vymyslet sem lepsi podminku
+	while (ifs.good())
 	{
 		getline(ifs, line);
 		

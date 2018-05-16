@@ -3,7 +3,7 @@
 #include <iomanip> // setw
 
 
-void report(std::ostream & out, const std::string & spell_name, const std::string & caster_name, const std::string & target_name, cislo calculaded_dmg) { // TODO: inline?
+void report(std::ostream & out, const std::string & spell_name, const std::string & caster_name, const std::string & target_name, cislo calculaded_dmg) {
 	out << caster_name << " pouziva " << spell_name << " na " << target_name << " a ubira mu " << calculaded_dmg << " zivotu. " << std::endl;
 }
 
