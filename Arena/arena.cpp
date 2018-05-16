@@ -29,40 +29,51 @@ void Arena::souboj() {
 		(*it->second).naplanuj_kouzlo();
 	}
 
+	// Kopie tymu, aby bylo momzne souboj zopakovat
+	team_container team1_f{ team1_ };
+	team_container team2_f{ team2_ };
+
 	bool konec = false;
 	while (!konec) {
 		out << std::endl << time_ << ". kolo" << std::endl; // Vypis casu
 
-		for (auto it = team1_.begin(); it != team1_.end(); ++it) { // TODO: Kdybych chtel delat kouzla, co zerou manu, byl by druhy tym znevyhodnen
-			(*it->second).akce( team2_);
+		for (auto it = team1_f.begin(); it != team1_f.end(); ++it) { // TODO: Kdybych chtel delat kouzla, co zerou manu, byl by druhy tym znevyhodnen
+			(*it->second).akce( team2_f);
 		}
-		for (auto it = team2_.begin(); it != team2_.end(); ++it) {
-			(*it->second).akce( team1_);
+		for (auto it = team2_f.begin(); it != team2_f.end(); ++it) {
+			(*it->second).akce( team1_f);
 		}
 
-		for (auto it = team1_.begin(); it != team1_.end(); ++it) {
-			if (aktualizuj_hp(out, team1_, it)) it = team1_.begin(); // Po zmene zacni odznova (hloupe, ale nenapadlo me nic lepsiho a team nebude nikdy tak velky, aby mi to vadilo)
-			if (it == team1_.end()) break;
+		for (auto it = team1_f.begin(); it != team1_f.end(); ++it) {
+			if (aktualizuj_hp(out, team1_f, it)) it = team1_f.begin(); // Po zmene zacni odznova (hloupe, ale nenapadlo me nic lepsiho a team nebude nikdy tak velky, aby mi to vadilo)
+			if (it == team1_f.end()) break;
 		}
-		for (auto it = team2_.begin(); it != team2_.end(); ++it) {
-			if (aktualizuj_hp(out, team2_, it)) it = team2_.begin(); // Po zmene zacni odznova (hloupe, ale nenapadlo me nic lepsiho a team nebude nikdy tak velky, aby mi to vadilo)
-			if (it == team2_.end()) break;
+		for (auto it = team2_f.begin(); it != team2_f.end(); ++it) {
+			if (aktualizuj_hp(out, team2_f, it)) it = team2_f.begin(); // Po zmene zacni odznova (hloupe, ale nenapadlo me nic lepsiho a team nebude nikdy tak velky, aby mi to vadilo)
+			if (it == team2_f.end()) break;
 		}
 
 		// Ukoncujici podminka
-		if (team1_.size() == 0 && team2_.size() == 0) {
+		if (team1_f.size() == 0 && team2_f.size() == 0) {
 			out << "Vsichni umreli. Je to nerozhodne. " << std::endl;
 			konec = true;
 		}
-		else if (team1_.size() == 0) {
+		else if (team1_f.size() == 0) {
 			out << "Vyhrava tym 2" << std::endl;
 			konec = true;
 		}
-		else if (team2_.size() == 0) {
+		else if (team2_f.size() == 0) {
 			out << "Vyhrava tym 1" << std::endl;
 			konec = true;
 		}
 
 		++time_;
+	}
+
+	for (auto it = team1_.begin(); it != team1_.end(); ++it) {
+		(*it->second).revive(); // Zacne ukazovat na konec seznamu naucenych kouzel
+	}
+	for (auto it = team2_.begin(); it != team2_.end(); ++it) {
+		(*it->second).revive();
 	}
 }

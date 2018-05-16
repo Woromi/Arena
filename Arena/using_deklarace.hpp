@@ -10,11 +10,11 @@ using cislo = int;
 
 // Arena + Mage
 class Mage;
-using team_container = std::multimap<cislo, std::unique_ptr<Mage>>;
+using team_container = std::multimap<cislo, std::shared_ptr<Mage>>; // Shared_ptr, abych mohl vytvorit kopii a z ni mazat mrtve magy
 using team_iterator = team_container::iterator;
 
 // Knihovna
-enum spell_families { fire, ice, size }; // TODO: Opravit chybu z doby, kdy jsem neumel dat tohle do hlavickoveho souboru
+enum spell_families { fire, ice, size }; // TODO: Opravit chyby z doby, kdy jsem neumel dat tohle do hlavickoveho souboru
 
 // Mage
 class Spell; // Kvuli seznamu kouzel

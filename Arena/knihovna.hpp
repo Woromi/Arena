@@ -81,6 +81,7 @@ struct Knihovna {
 	~Knihovna() = default;
 
 	Spell * get_spell(std::string spell) const;
+	void show_spells_header() const;
 	void show_spells() const;
 	//const MapKnihovna & get_spells() const { return Spells; }
 private:

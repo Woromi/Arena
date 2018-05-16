@@ -1,13 +1,12 @@
 Aréna mágù
 
 Zadání: 
-Po spuštìní programu "hráè" vytvoøí mágy, nauèí je nìjaká kouzla, nakoupí jim nìjaké pøedmìty a zaøadí je do jednoho ze dvou týmù. Následnì spolu tyto dva týmy svedou souboj (bez dalšího zásahu hráèe).
-
+Uživatel má možnost vytvoøit mágy, které mùže nauèit nìjaká kouzla, mùže jim nakoupit nìjaké vybavení a zaøadit je do jednoho ze dvou týmù. Následnì mùže poslat tyto dva týmy na souboj (který se odehraje bez dalšího zásahu uživatele).
 
 Souboj:
 Pro souboj jsem se musel rozhodnout, jakým zpùsobem si budou mágové vybírat kouzla a protivníka. Nakonec jsem se (hlavnì pro jednoduchost) rozhodl, že budou mít nìjaký seznam kouzel, který budou pravidelnì procházet a kouzla støídat v poøadí, v jakém se kouzla nauèili. Mohou se tedy nauèit nìjaké kouzlo vícekrát. Vzhledem k tomu, že znalost více kouzel mága nijak nezvýhodòuje, je uèení nových kouzel zadarmo. 
-Mág vždy sešle kouzlo na protivníka s nejmenším poètem HP (pokud zrovna nesesílá plošné kouzlo). 
-Souboj probíhá po jednotlivých kolech. V každém kole se mágovi pøiète nìjaké zdraví a mana díky regeneraci a pokraèuje v pøípravì (castìní) kouzla. Ve chvíli, kdy se pøipravuje dostateèný poèet kol, kouzlo sešle. Každé kolo provede každý mág nìjakou akci a teprve poté jsou každému odeèteny životy, nezáleží tedy na poøadí (kromì pøípadu, že by nìkdo nìkomu vysával manu, to bych ještì musel nìjak ošetøit).
+Mág vždy sešle kouzlo na protivníka s nejmenším poètem HP (pokud zrovna nesesílá plošné kouzlo na všechny protivníky). 
+Souboj probíhá po jednotlivých kolech. V každém kole se mágovi pøiète nìjaké zdraví a mana díky regeneraci a pokraèuje v pøípravì kouzla. Ve chvíli, kdy se pøipravuje dostateèný poèet kol, kouzlo sešle. Každé kolo provede každý mág nìjakou akci a teprve poté jsou každému odeèteny životy, nezáleží tedy na poøadí.
 
 Pùvodnì jsem chtel souboj vést pomocí diskrétní simulace, jak jsme se to uèili na Programování II. Mìl bych tedy kalendáø a kouzla by se sesílala až když by byla pøipravena. To jsem nakonec zavrhl ze dvou dùvodù. Za prvé kvùli regeneraci, která by nebyla aplikována každé kolo, ale skokovì a to by vedlo k dalším problémùm. Za druhé kvùli tomu, že jsem chtìl mít možnost oddálit dobu seslání kouzla (napø. zmrazení). Pøedtím jsem se snažil si u každého mága pamatovat pointer na jeho událost (abych ji mohl oddalovat), ale to vedlo k mnohem složitìjšímu rozvržení programu.
 
@@ -23,5 +22,10 @@ Pøedmìty jsou vyøešeny trošku jinak než kouzla, protože jsem tady nepotøeboval r
 Pøedmìty jsou uloženy v samostatném souboru, pro který jsem se rozhodl kvùli snadné úpravì a pøípadnému pøidávání nových vlastností. Kdybych totiž pøedával všechny vlastnosti v konstruktoru jako u kouzel, musel bych po pøidání nìjaké nové vlastnosti upravovat konstruktory všech starých vìcí. 
 Po zakoupení pøedmìtu se jeho vlastnosti pøiètou k vlastnostem mága a mág si uloží pointer na nìj. Díky nìmu mùže mág pøedmìt zase prodat a nakoupit místo nìj jiný. 
 
-Vytváøení mágù:
-Hráè vytváøí mága psaním rùzných pøíkazù (které mùže vypsat pøíkazem 'help') do konzole. Mage 'jmeno' vytvoøí nového mága, kterého následnì mùže vylepšovat a pøíkazem Team [12] ho zaøadí do jenoho z týmù v arénì. Nyní se k nemu už nemùže vrátit (do arény jsem ho pøesunul pomocí std::move), což není nejlepší øešení a je to námìt k vylepšení do budoucna.
+Vytváøení mágù (ovládání programu):
+Uživatel vytváøí mága psaním rùzných pøíkazù (které mùže vypsat pøíkazem 'help') do konzole. Na velikosti písmen nezáleží. 
+Mage 'jmeno' vytvoøí nového mága, kterého následnì mùže vylepšovat pøíkazy Learn 'jméno kouzla' nebo Buy (weapon|robe) 'jméno pøedmìtu'.
+Seznam všech dostupných kouzel lze zobrazit pøíkazem Library, seznam všech pøedmìtù pøíkazem Shop.
+Pøíkazem Team [12] ukonèí vytváøení mága a zaøadí ho do jenoho z týmù v arénì. Nyní se k nìmu už nemùže vrátit, což není nejlepší øešení a je to námìt k vylepšení do budoucna.
+Po vytvoøení všech mágù a jejich zaøazení do týmù napíše uživatel Fight, èímž odstartuje souboj. Fight mùže volat i opakovanì a mùže mít rùzné výsledky, protože magie je tìžko pøedvídatelná a závisí také na náhodì. 
+Pro ukonèení programu staèí napsat Exit.

@@ -5,6 +5,11 @@
 #include <iomanip> // setw
 
 
+void Mage::revive() {
+	health_ = max_health_;
+	mana_ = max_mana_;
+}
+
 void Mage::learn( const Spell * spell) { 
 	if (spell != nullptr) {
 		kouzla_.emplace_back(spell);
@@ -13,25 +18,28 @@ void Mage::learn( const Spell * spell) {
 }
 
 void Mage::show_stats() {
-	arena_.out << name_ << std::endl
-		// Spells
-		<< std::setw(20) << "Spells:" << std::endl;
+	int odsazeni1 = 3, odsazeni2 = 6;
+	arena_.out << name_ << std::endl;
+	// Spells
+	
+	arena_.out << std::setw(odsazeni1) << "" << "Spells:" << std::endl;
 	for (auto && k : kouzla_) k->show_spell();
 	// Items
-	arena_.out << std::setw(20) << "Items:" << std::endl
-		<< std::setw(25) << "Weapon: ";
+	arena_.out << std::setw(odsazeni1) << "" << "Items:" << std::endl
+		<< std::setw(odsazeni2) << "" << "Weapon: ";
 	if (weapon_ != nullptr)weapon_->show_stats();
 	else arena_.out << "No weapon" << std::endl;
-	arena_.out << std::setw(25) << "Robe: ";
+	arena_.out << std::setw(odsazeni2) << "" << "Robe: ";
 	if (robe_ != nullptr) robe_->show_stats();
 	else arena_.out << "No robe" << std::endl;
 	// Stats
 	arena_.out // TODO: Predelat staty do pole indexovaneho enum
-		<< "Health: " << health_ << std::endl
-		<< "Health regen: " << health_regen_ << std::endl
-		<< "Mana: " << mana_ << std::endl
-		<< "Mana regen: " << mana_regen_ << std::endl
-		<< "Spell power: " << spell_power_ << std::endl;
+		<< std::setw(odsazeni1) << "" << "Health: " << health_ << std::endl
+		<< std::setw(odsazeni1) << "" << "Health regen: " << health_regen_ << std::endl
+		<< std::setw(odsazeni1) << "" << "Mana: " << mana_ << std::endl
+		<< std::setw(odsazeni1) << "" << "Mana regen: " << mana_regen_ << std::endl
+		<< std::setw(odsazeni1) << "" << "Spell power: " << spell_power_ << std::endl;
+	arena_.out << std::endl;
 }
 
 void Mage::akce( team_container & enemy_team) {
@@ -47,8 +55,16 @@ void Mage::akce( team_container & enemy_team) {
 		--burn_;
 	}
 
-	if (pristi_kouzlo_ == kouzla_.end()) // Je zacatek a jeste zadne kouzlo nemas vybrane, nebo jsi hloupy a neumis pouzivat zadne kouzlo (pokud jsi se ho zapomel naucit)
+	if (pristi_kouzlo_ == kouzla_.end()) {// Je zacatek a jeste zadne kouzlo nemas vybrane, nebo jsi hloupy a neumis pouzivat zadne kouzlo (pokud jsi se ho zapomel naucit)
 		pristi_kouzlo_ = kouzla_.begin();
+		// Pokud mag neumi zadne kouzlo, basic attack
+		if (pristi_kouzlo_ == kouzla_.end())
+		{
+			team_iterator target = enemy_team.begin();
+			arena_.out << name_ << " neumi zadne kouzlo a proto se pokusil protivnika alespon bouchnout." << std::endl;
+			target->second->add_health(-10);
+		}
+	}
 	else // Pristi kouzlo je nejake kouzlo
 	{
 		// Postup v kouzleni (pokud mas dostatek many, zacni)
@@ -64,7 +80,6 @@ void Mage::akce( team_container & enemy_team) {
 			// Pokud ma kouzlo jen jeden cil, pouzij ho na nejslabsiho maga
 			if ((**pristi_kouzlo_).single_target()) {
 				team_iterator target = enemy_team.begin();
-				(**pristi_kouzlo_).calculate_damage(*this, *(target->second), spell_families::fire);
 				(**pristi_kouzlo_).cast( *this, *(target->second));
 			}
 			// Jinak ho pouzij na vsechny

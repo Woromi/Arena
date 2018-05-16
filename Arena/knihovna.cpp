@@ -36,7 +36,7 @@ Spell * Knihovna::get_spell( std::string spell) const {
 	return nullptr;
 }
 
-void Knihovna::show_spells() const {
+void Knihovna::show_spells_header() const {
 	arena_.out
 		<< std::setw(30) << "Name:"
 		<< std::setw(15) << "Damage:"
@@ -44,10 +44,15 @@ void Knihovna::show_spells() const {
 		<< std::setw(15) << "Casting time:"
 		<< std::setw(15) << "Target"
 		<< std::endl;
+}
+
+void Knihovna::show_spells() const {
+	show_spells_header();
 	for (auto && spell : spells)
 	{
 		spell.second->show_spell();
 	}
+	arena_.out << std::endl;
 }
 
 

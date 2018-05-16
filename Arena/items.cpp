@@ -103,30 +103,30 @@ Shop::Shop(const Arena & arena, const std::string & file_name) : arena_{arena} {
 void item::show_stats() const {
 	arena_.out
 		<< std::setw(30) << name_
-		<< std::setw(15) << health_
-		<< std::setw(15) << health_regen_
-		<< std::setw(15) << mana_
-		<< std::setw(15) << mana_regen_;
+		<< std::setw(10) << price_
+		<< std::setw(10) << health_
+		<< std::setw(10) << health_regen_
+		<< std::setw(10) << mana_
+		<< std::setw(10) << mana_regen_;
 	for (std::uint16_t i = 0; i < resistance_.size(); ++i)
 		arena_.out << std::setw(15) << resistance_[i];
 	arena_.out << std::setw(15) << spell_power_
-		<< std::setw(20) << price_
 		<< std::endl;
 }
 
 void show_headline(std::ostream & out) {
 	std::array<std::string, spell_families::size + 1> elements{ "Fire", "Ice", "Dodefinuj me" };
 	out << std::setw(30) << "Name"
-		<< std::setw(15) << "Health"
-		<< std::setw(15) << "Health regen"
-		<< std::setw(15) << "Mana"
-		<< std::setw(15) << "Mana regen";
+		<< std::setw(10) << "Price"
+		<< std::setw(10) << "Health"
+		<< std::setw(10) << "H regen"
+		<< std::setw(10) << "Mana"
+		<< std::setw(10) << "M regen";
 	for (std::uint16_t i = 0; i < spell_families::size; ++i) {
 		out << std::setw(8)
 			<< elements[i] << " resist";
 	}
 	out << std::setw(15) << "Spell power"
-		<< std::setw(20) << "Price"
 		<< std::endl;
 }
 
@@ -136,6 +136,7 @@ void Shop::show_weapons() const {
 	for (auto && item : weapon_shop_) {
 		item.second.show_stats();
 	}
+	arena_.out << std::endl;
 }
 
 void Shop::show_robes() const {
@@ -144,6 +145,7 @@ void Shop::show_robes() const {
 	for (auto && item : robes_shop_) {
 		item.second.show_stats();
 	}
+	arena_.out << std::endl;
 }
 
 weapon * Shop::get_weapon( const std::string & name) { 

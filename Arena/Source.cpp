@@ -9,10 +9,10 @@ int main(int argc, char * * argv) {
 	Knihovna knihovna{arena};
 	Shop shop{ arena, "items.txt" }; // Nacti vybaveni ze souboru
 
-	// read_input(arena, knihovna, shop);
+	read_input(arena, knihovna, shop);
 
 	// Vytvareni tymu bez cteni vstupu (jen pro testovani souboje)
-	{	
+	/*{	
 		Mage Plosnak{ "Plosnak", arena };
 		Mage Plosnak2{ "Plosnak2", arena };
 		Mage Dummy1{ "Dummy1", arena };
@@ -29,7 +29,7 @@ int main(int argc, char * * argv) {
 		arena.team1_add(std::move(Plosnak2));
 		arena.team2_add(std::move(Dummy1));
 		arena.team2_add(std::move(Dummy2));
+		
+		arena.souboj();
 	}//*/
-
-	arena.souboj();
  }
