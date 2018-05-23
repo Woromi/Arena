@@ -51,9 +51,9 @@ class robe: public item {
 	using item::item;
 };
 
-
-
-
+class hat : public item {
+	using item::item;
+};
 
 
 struct Shop {
@@ -67,15 +67,31 @@ public:
 	Shop & operator=(Shop &&) = default;
 	~Shop() = default;
 
-	weapon * get_weapon( const std::string & name);
-	robe * get_robe( const std::string & name);
-	// Vypis zbozi na cout
-	void show_weapons() const;
-	void show_robes() const;
+	weapon * get_weapon(const std::string & name);
+	robe * get_robe(const std::string & name);
+	hat * get_hat(const std::string & name);
+
+	// Vypis zbozi urciteho druhu
+	template<typename item_type>
+	void show_items(std::string type_name, std::map<std::string, item_type> shop) const {
+		arena_.out << std::setw(odsazeni::o1) << "" << type_name << ":" << std::endl;
+		show_headline(arena_.out);
+		for (auto && item : shop) {
+			item.second.show_stats(odsazeni::o2);
+		}
+		arena_.out << std::endl;
+	}
+
+	auto get_weapons() const { return weapon_shop_; }
+	auto get_robes() const { return robes_shop_; }
+	auto get_hats() const { return hats_shop_; }
 private:
+	void show_headline(std::ostream & out) const;
+
 	const Arena & arena_;
 	std::map<std::string, weapon> weapon_shop_;
 	std::map<std::string, robe> robes_shop_;
+	std::map<std::string, hat> hats_shop_;
 };
 
 #endif // !equipement_hpp

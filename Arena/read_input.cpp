@@ -38,8 +38,9 @@ void write_help(std::ostream & out) {
 }
 
 void write_items( const Shop & shop) {
-	shop.show_weapons();
-	shop.show_robes();
+	shop.show_items("Weapons", shop.get_weapons());
+	shop.show_items("Robes", shop.get_robes());
+	shop.show_items("Hats", shop.get_hats());
 	// TODO: Pridat dalsi druhy vybaveni
 }
 
@@ -92,8 +93,9 @@ void read_input( Arena & arena, Knihovna & knihovna, Shop & shop)
 				else if (icompare(vstup, "Shop")) write_items(shop);
 				else if (icompare(vstup, "Buy")) { 
 					arena.in >> vstup; 
-					if		(icompare(vstup, "weapon")) { my_getline(std::cin, vstup); mage.buy_weapon( shop.get_weapon( vstup)); }
-					else if (icompare(vstup, "robe"))   { my_getline(std::cin, vstup); mage.buy_robe(   shop.get_robe(   vstup)); }
+					if (icompare(vstup, "weapon")) { my_getline(std::cin, vstup);    mage.buy_weapon(shop.get_weapon(vstup)); }
+					else if (icompare(vstup, "robe")) { my_getline(std::cin, vstup); mage.buy_robe(  shop.get_robe(vstup)); }
+					else if (icompare(vstup, "hat")) { my_getline(std::cin, vstup);  mage.buy_hat(   shop.get_hat(vstup)); }
 					else arena.out << "Neznamy typ predmetu: >>" << vstup << "<<" << std::endl << std::endl;
 					mage.show_stats();
 				}

@@ -34,6 +34,9 @@ void Mage::show_stats() {
 	arena_.out << std::setw(odsazeni::o2) << "" << "Robe: ";
 	if (robe_ != nullptr) robe_->show_stats(0);
 	else arena_.out << "No robe" << std::endl;
+	arena_.out << std::setw(odsazeni::o2) << "" << "Hat: ";
+	if (hat_ != nullptr) hat_->show_stats(0);
+	else arena_.out << "No hat" << std::endl;
 	// Stats
 	arena_.out 
 		<< std::setw(odsazeni::o1) << "" << "Health: " << health_ << std::endl
@@ -136,5 +139,24 @@ void Mage::sell_robe() {
 	{
 		robe_->sell(*this);
 		robe_ = nullptr;
+	}
+}
+
+
+void Mage::buy_hat(const hat * new_hat) {
+	if (new_hat != nullptr) { // Kopirovani je castym zdrojem chyb
+		if (hat_ != nullptr)
+			sell_hat();
+		if (new_hat->buy(*this)) {
+			hat_ = new_hat;
+		}
+	}
+}
+
+void Mage::sell_hat() {
+	if (hat_ != nullptr)
+	{
+		hat_->sell(*this);
+		hat_ = nullptr;
 	}
 }

@@ -28,6 +28,7 @@ class Spell; // Kvuli seznamu kouzel
 class Mage; // Kvuli team_containeru
 class weapon; // Kvuli nakupu predmetu
 class robe;
+class hat;
 enum effects {	burn,	// Ubira 5 zivotu kazde kolo
 				freeze, // Oddali kouzlo o 1 kolo
 				count_of_effects };

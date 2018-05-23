@@ -101,6 +101,14 @@ Shop::Shop(const Arena & arena, const std::string & file_name) : arena_{arena} {
 				getline(ifs, line);
 			}
 		}
+		else if (line == "hats") {
+			getline(ifs, line);
+			while (line != "") { // Dokud nenarazis na prazdnou radku
+				std::string name = line;
+				hats_shop_.emplace(name, hat{ arena_, ifs, name });
+				getline(ifs, line);
+			}
+		}
 	}
 }
 
@@ -122,7 +130,7 @@ void item::show_stats(cislo odsazeni) const {
 		<< std::endl;
 }
 
-void show_headline(std::ostream & out) {
+void Shop::show_headline(std::ostream & out) const {
 	std::array<std::string, spell_families::size + 1> elements{ "Fire", "Ice", "Dodefinuj me" };
 	out << std::setw(odsazeni::o2) << ""
 		<< std::setw(30) << "Name"
@@ -139,24 +147,6 @@ void show_headline(std::ostream & out) {
 		<< std::endl;
 }
 
-void Shop::show_weapons() const {
-	arena_.out << std::setw(odsazeni::o1) << "" << "Weapons:" << std::endl;
-	show_headline(arena_.out);
-	for (auto && item : weapon_shop_) {
-		item.second.show_stats(odsazeni::o2);
-	}
-	arena_.out << std::endl;
-}
-
-void Shop::show_robes() const {
-	arena_.out << std::setw(odsazeni::o1) << "" << "Robes:" << std::endl;
-	show_headline(arena_.out);
-	for (auto && item : robes_shop_) {
-		item.second.show_stats(odsazeni::o2);
-	}
-	arena_.out << std::endl;
-}
-
 weapon * Shop::get_weapon( const std::string & name) { 
 	if (weapon_shop_.find(name) != weapon_shop_.end())
 		return &weapon_shop_.at(name);
@@ -171,5 +161,14 @@ robe * Shop::get_robe(const std::string & name) {
 		return &robes_shop_.at(name);
 	else
 		arena_.out << "Roba s nazvem >>" << name << "<< nebyla nalezena" << std::endl;
+	return nullptr;
+}
+
+
+hat * Shop::get_hat(const std::string & name) {
+	if (hats_shop_.find(name) != hats_shop_.end())
+		return &hats_shop_.at(name);
+	else
+		arena_.out << "Klobouk s nazvem >>" << name << "<< nebyl nalezena" << std::endl;
 	return nullptr;
 }

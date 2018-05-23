@@ -71,10 +71,13 @@ public:
 	void sell_weapon();
 	void buy_robe(const robe * new_robe);
 	void sell_robe();
+	void buy_hat( const hat * new_hat);
+	void sell_hat();
 
 	// Pouze na prohlizeni
 	const weapon * get_weapon() const { return weapon_; }
 	const robe * get_robe() const { return robe_; }
+	const hat * get_hat() const { return hat_; }
 private:
 	const Arena & arena_;
 	// Jmeno
@@ -100,6 +103,7 @@ private:
 	// Equipement
 	const weapon * weapon_;
 	const robe * robe_;
+	const hat * hat_;
 };
 
 #endif // !mage_hpp
