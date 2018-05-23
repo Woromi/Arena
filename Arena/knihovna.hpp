@@ -18,7 +18,7 @@ public:
 	void cast( Mage & caster, Mage & target) const { cast_(  caster, target); } // Chci menit maga -> nekonstantni reference
 	void elemental_passive( Mage & caster, Mage & target) const { elemental_passive_( caster, target); };
 	cislo calculate_damage(Mage & caster, Mage & target, spell_families) const;
-	void show_spell() const;
+	void show_spell(cislo odsazeni) const;
 	// get a set
 	std::string get_name() const { return name_; }
 	cislo get_damage() const { return damage_; }

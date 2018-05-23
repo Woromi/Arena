@@ -29,3 +29,10 @@ price=500
 health=1000
 fire_resistance=50
 =
+
+hats
+Hat
+price=250
+mana=200
+spell_power=15
+=

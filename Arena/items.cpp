@@ -22,10 +22,14 @@ bool item::buy( Mage & mage) const {
 			mage.add_resist(i, resistance_[i]);
 
 		mage.add_spell_power(spell_power_);
+
+		arena_.out << mage.get_name() << " si koupil " << name_ << std::endl
+			<< "Zustatek: " << mage.get_money() << std::endl << std::endl;
 		return true;
 	}
 	else {
-		arena_.out << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl;
+		arena_.out << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl
+			       << "Zustatek: " << mage.get_money() << "(" << name_ << " stoji " << price_ << ")" << std::endl << std::endl;
 		return false;
 	}
 }
@@ -43,6 +47,9 @@ void item::sell(Mage & mage) const { // Predpokladam, ze to bude volat pouze mag
 		mage.add_resist(i, -resistance_[i]);
 
 	mage.add_spell_power(-spell_power_);
+
+	arena_.out << mage.get_name() << " prodal " << name_ << std::endl
+		       << "Zustatek: " << mage.get_money() << std::endl << std::endl;
 }
 
 // Cteni vlastnosti vybaveni ze souboru
@@ -100,8 +107,9 @@ Shop::Shop(const Arena & arena, const std::string & file_name) : arena_{arena} {
 
 
 // Vypis zbozi obchodu
-void item::show_stats() const {
+void item::show_stats(cislo odsazeni) const {
 	arena_.out
+		<< std::setw(odsazeni) << ""
 		<< std::setw(30) << name_
 		<< std::setw(10) << price_
 		<< std::setw(10) << health_
@@ -116,7 +124,8 @@ void item::show_stats() const {
 
 void show_headline(std::ostream & out) {
 	std::array<std::string, spell_families::size + 1> elements{ "Fire", "Ice", "Dodefinuj me" };
-	out << std::setw(30) << "Name"
+	out << std::setw(odsazeni::o2) << ""
+		<< std::setw(30) << "Name"
 		<< std::setw(10) << "Price"
 		<< std::setw(10) << "Health"
 		<< std::setw(10) << "H regen"
@@ -131,19 +140,19 @@ void show_headline(std::ostream & out) {
 }
 
 void Shop::show_weapons() const {
-	arena_.out << "Weapons:" << std::endl;
+	arena_.out << std::setw(odsazeni::o1) << "" << "Weapons:" << std::endl;
 	show_headline(arena_.out);
 	for (auto && item : weapon_shop_) {
-		item.second.show_stats();
+		item.second.show_stats(odsazeni::o2);
 	}
 	arena_.out << std::endl;
 }
 
 void Shop::show_robes() const {
-	arena_.out << "Robes:" << std::endl;
+	arena_.out << std::setw(odsazeni::o1) << "" << "Robes:" << std::endl;
 	show_headline(arena_.out);
 	for (auto && item : robes_shop_) {
-		item.second.show_stats();
+		item.second.show_stats(odsazeni::o2);
 	}
 	arena_.out << std::endl;
 }

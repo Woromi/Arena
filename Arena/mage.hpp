@@ -12,7 +12,8 @@
 class Mage {
 public:
 	Mage(std::string name, const Arena & arena) : name_{ name }, arena_{arena}, money_{ 1000 }, max_health_{ 500 }, health_regen_{ 5 }, max_mana_{ 500 }, mana_regen_{ 10 } {
-		resistance_.resize(spell_families::size);
+		resistance_.resize(spell_families::size, 0);
+		efekty_.resize(effects::count_of_effects, 0);
 		health_ = max_health_;
 		mana_ = max_mana_;
 	};
@@ -51,6 +52,7 @@ public:
 	cislo get_mana_regen() const { return mana_regen_; }
 	// Money
 	bool spend_money(cislo price) { if (money_ - price >= 0) { money_ -= price; return true; } else return false; }
+	cislo get_money() const { return money_; }
 	// Spell power
 	void add_spell_power(cislo value) { if (spell_power_ + value >= 0) spell_power_ += value; }
 	cislo get_spell_power() const { return spell_power_; }
@@ -61,8 +63,8 @@ public:
 	const std::string & get_name() const { return name_; }
 
 
-	void set_frozen() { frozen_ = true; }
-	void set_burn(cislo pocet_kol) { burn_ = pocet_kol; }
+	void set_frozen() { efekty_[effects::freeze] = 1; }
+	void set_burn(cislo pocet_kol) { efekty_[effects::burn] = pocet_kol; }
 
 	// buy a sell
 	void buy_weapon( const weapon * new_weapon);
@@ -88,8 +90,7 @@ private:
 	// Resistance
 	std::vector<cislo> resistance_;
 	// Efekty
-	bool frozen_ = false; // Zmrazeny zpomali casteni o jedno kolo
-	cislo burn_ = 0; // Kazde kolo ubere 5 HP
+	std::vector<cislo> efekty_;
 	// Kouzleni
 	cislo casting_time_;
 	cislo spell_power_;

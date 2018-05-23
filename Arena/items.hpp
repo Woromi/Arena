@@ -18,7 +18,7 @@ public:
 	item(const Arena & arena, std::istream & ifs, std::string & name);
 	bool buy( Mage & mage) const;
 	void sell(Mage & mage) const;
-	void show_stats() const;
+	void show_stats(cislo odsazeni) const;
 	// get
 	const std::string & get_name() const { return name_; }
 	cislo get_price() const { return price_; }

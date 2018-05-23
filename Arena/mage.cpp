@@ -18,27 +18,29 @@ void Mage::learn( const Spell * spell) {
 }
 
 void Mage::show_stats() {
-	int odsazeni1 = 3, odsazeni2 = 6;
 	arena_.out << name_ << std::endl;
 	// Spells
 	
-	arena_.out << std::setw(odsazeni1) << "" << "Spells:" << std::endl;
-	for (auto && k : kouzla_) k->show_spell();
+	arena_.out << std::setw(odsazeni::o1) << "" << "Spells:" << std::endl;
+	if (kouzla_.size() > 0)
+		for (auto && k : kouzla_) k->show_spell(odsazeni::o2);
+	else
+		arena_.out << std::setw(odsazeni::o2) << "" << name_ << " can't cast any spells." << std::endl;
 	// Items
-	arena_.out << std::setw(odsazeni1) << "" << "Items:" << std::endl
-		<< std::setw(odsazeni2) << "" << "Weapon: ";
-	if (weapon_ != nullptr)weapon_->show_stats();
+	arena_.out << std::setw(odsazeni::o1) << "" << "Items:" << std::endl
+		<< std::setw(odsazeni::o2) << "" << "Weapon: ";
+	if (weapon_ != nullptr)weapon_->show_stats(0);
 	else arena_.out << "No weapon" << std::endl;
-	arena_.out << std::setw(odsazeni2) << "" << "Robe: ";
-	if (robe_ != nullptr) robe_->show_stats();
+	arena_.out << std::setw(odsazeni::o2) << "" << "Robe: ";
+	if (robe_ != nullptr) robe_->show_stats(0);
 	else arena_.out << "No robe" << std::endl;
 	// Stats
 	arena_.out 
-		<< std::setw(odsazeni1) << "" << "Health: " << health_ << std::endl
-		<< std::setw(odsazeni1) << "" << "Health regen: " << health_regen_ << std::endl
-		<< std::setw(odsazeni1) << "" << "Mana: " << mana_ << std::endl
-		<< std::setw(odsazeni1) << "" << "Mana regen: " << mana_regen_ << std::endl
-		<< std::setw(odsazeni1) << "" << "Spell power: " << spell_power_ << std::endl;
+		<< std::setw(odsazeni::o1) << "" << "Health: " << health_ << std::endl
+		<< std::setw(odsazeni::o1) << "" << "Health regen: " << health_regen_ << std::endl
+		<< std::setw(odsazeni::o1) << "" << "Mana: " << mana_ << std::endl
+		<< std::setw(odsazeni::o1) << "" << "Mana regen: " << mana_regen_ << std::endl
+		<< std::setw(odsazeni::o1) << "" << "Spell power: " << spell_power_ << std::endl;
 	arena_.out << std::endl;
 }
 
@@ -50,9 +52,9 @@ void Mage::akce( team_container & enemy_team) {
 	if (mana_ > max_mana_) mana_ = max_mana_;
 
 	// Burn
-	if (burn_ > 0) {
+	if (efekty_[effects::burn] > 0) {
 		health_ -= 5;
-		--burn_;
+		--efekty_[effects::burn];
 	}
 
 	if (pristi_kouzlo_ == kouzla_.end()) {// Je zacatek a jeste zadne kouzlo nemas vybrane, nebo jsi hloupy a neumis pouzivat zadne kouzlo (pokud jsi se ho zapomel naucit)
@@ -61,7 +63,7 @@ void Mage::akce( team_container & enemy_team) {
 		if (pristi_kouzlo_ == kouzla_.end())
 		{
 			team_iterator target = enemy_team.begin();
-			arena_.out << name_ << " neumi zadne kouzlo a proto se pokusil protivnika alespon bouchnout." << std::endl;
+			arena_.out << std::setw(odsazeni::o2) << "" << name_ << " neumi zadne kouzlo a proto se pokusil protivnika alespon bouchnout." << std::endl;
 			target->second->add_health(-10);
 		}
 	}
@@ -69,8 +71,8 @@ void Mage::akce( team_container & enemy_team) {
 	{
 		// Postup v kouzleni (pokud mas dostatek many, zacni)
 		if (mana_ >= (**pristi_kouzlo_).get_cost())
-			if (!frozen_) ++casting_time_;
-			else frozen_ = false;
+			if (!efekty_[effects::freeze]) ++casting_time_;
+			else efekty_[effects::freeze] = false;
 		else // Kdyby jsi nahodou ztratil potrebnou manu, musis zacit odzacatku
 			casting_time_ = 0; 
 
@@ -100,10 +102,14 @@ void Mage::akce( team_container & enemy_team) {
 
 // Nakupovani a prodavani predmetu
 void Mage::buy_weapon( const weapon * new_weapon) {
-	if (new_weapon != nullptr && weapon_ == nullptr && new_weapon->buy( *this)) // Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
-	{
-		weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
-		arena_.out << this->name_ << " si koupil " << weapon_->get_name() << std::endl;
+	// Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
+	if (new_weapon != nullptr) { 
+		if (weapon_ != nullptr) {
+			sell_weapon();
+		}
+		if (new_weapon->buy(*this)) {
+			weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
+		}
 	}
 }
 
@@ -111,16 +117,17 @@ void Mage::sell_weapon() {
 	if (weapon_ != nullptr) // Pokud ma nejakou zbran, prodej ji
 	{
 		weapon_->sell(*this);
-		arena_.out << this->name_ << " prodal " << weapon_->get_name() << std::endl;
 		weapon_ = nullptr;
 	}
 }
 
 void Mage::buy_robe(const robe * new_robe) {
-	if (new_robe != nullptr && robe_ == nullptr && new_robe->buy( *this)) // Kopirovani je castym zdrojem chyb
-	{
-		robe_ = new_robe;
-		arena_.out << this->name_ << " si koupil " << robe_->get_name() << std::endl;
+	if (new_robe != nullptr) { // Kopirovani je castym zdrojem chyb
+		if (robe_ != nullptr)
+			sell_robe();
+		if (new_robe->buy(*this)) {
+			robe_ = new_robe;
+		}
 	}
 }
 
@@ -128,7 +135,6 @@ void Mage::sell_robe() {
 	if (robe_ != nullptr)
 	{
 		robe_->sell(*this);
-		arena_.out << this->name_ << " prodal " << robe_->get_name() << std::endl;
 		robe_ = nullptr;
 	}
 }

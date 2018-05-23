@@ -1,7 +1,7 @@
 #include "arena.hpp"
 
 #include <iostream>
-
+#include <iomanip>
 
 bool aktualizuj_hp(std::ostream & out, team_container & team, team_iterator & target) {
 	cislo old_health = target->first;
@@ -16,7 +16,7 @@ bool aktualizuj_hp(std::ostream & out, team_container & team, team_iterator & ta
 		}
 		// Pokud umrel, odstran ho ze seznamu
 		else {
-			out << target->second->get_name() << " umrel" << std::endl;
+			out << std::setw(odsazeni::o2) << "" << target->second->get_name() << " umrel" << std::endl;
 			team.erase(target);
 		}
 	}
@@ -39,9 +39,11 @@ void Arena::souboj() {
 	team_container team2_f{ team2_ };
 
 	bool konec = false;
-	while (!konec) {
-		out << std::endl << time_ << ". kolo" << std::endl; // Vypis casu
+	while (!konec) {		
+		out << std::endl << time_ << ". kolo _________________________________________________________" << std::endl << std::endl; // Vypis casu
 
+		// Kazdy mag provede svoji akci (ale zatim nikdo neumre i kdyby ztratil vsechna HP)
+		out << std::setw(odsazeni::o1) << "" << "Akce: " << std::endl;
 		for (auto it = team1_f.begin(); it != team1_f.end(); ++it) { // TODO: Kdybych chtel delat kouzla, co zerou manu, byl by druhy tym znevyhodnen
 			(*it->second).akce( team2_f);
 		}
@@ -49,14 +51,31 @@ void Arena::souboj() {
 			(*it->second).akce( team1_f);
 		}
 
+		// Aktualizace poradi magu po nejakem zraneni (tady prave muze nekdo umrit - zmizet ze seznamu)
 		for (auto it = team1_f.begin(); it != team1_f.end(); ++it) {
-			if (aktualizuj_hp(out, team1_f, it)) it = team1_f.begin(); // Po zmene zacni odznova (hloupe, ale nenapadlo me nic lepsiho a team nebude nikdy tak velky, aby mi to vadilo)
+			// Pokud zmenis poradi v mape, musis zacit odznova, abys nikoho nepreskocil
+			if (aktualizuj_hp(out, team1_f, it)) it = team1_f.begin(); 
 			if (it == team1_f.end()) break;
 		}
 		for (auto it = team2_f.begin(); it != team2_f.end(); ++it) {
-			if (aktualizuj_hp(out, team2_f, it)) it = team2_f.begin(); // Po zmene zacni odznova (hloupe, ale nenapadlo me nic lepsiho a team nebude nikdy tak velky, aby mi to vadilo)
+			if (aktualizuj_hp(out, team2_f, it)) it = team2_f.begin();
 			if (it == team2_f.end()) break;
 		}
+
+		out << std::endl;
+
+		// Vypis HP vsech magu po kazdem kole
+		out << std::setw(odsazeni::o1) << "" << "Prubezne vysledky souboje: " << std::endl
+		    << std::setw(odsazeni::o2) << "" << "Team 1: " << std::endl;
+		for (auto it = team1_f.begin(); it != team1_f.end(); ++it) {
+			out << std::setw(odsazeni::o3) << "" << it->second->get_name() << ": \t" << it->second->get_health() << std::endl;
+		}
+		out << std::setw(odsazeni::o2) << "" << "Team 2: " << std::endl;
+		for (auto it = team2_f.begin(); it != team2_f.end(); ++it) {
+			out << std::setw(odsazeni::o3) << "" << it->second->get_name() << ": \t" << it->second->get_health() << std::endl;
+		}
+
+		out << std::endl;
 
 		// Ukoncujici podminka
 		if (team1_f.size() == 0 && team2_f.size() == 0) {

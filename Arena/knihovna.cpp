@@ -4,15 +4,16 @@
 
 
 void report(std::ostream & out, const std::string & spell_name, const std::string & caster_name, const std::string & target_name, cislo calculaded_dmg) {
-	out << caster_name << " pouziva " << spell_name << " na " << target_name << " a ubira mu " << calculaded_dmg << " zivotu. " << std::endl;
+	out << std::setw(odsazeni::o2) << "" << caster_name << " pouziva " << spell_name << " na " << target_name << " a ubira mu " << calculaded_dmg << " zivotu. " << std::endl;
 }
 
 cislo Spell::calculate_damage(Mage & caster, Mage & target, spell_families f) const {
 	return (cislo)(damage_ * (1 + (double)caster.get_spell_power() / 100) * (1 - (double)target.get_resist(f) / 100)); // TODO: Vymyslet nejakou lepsi rovnici, tohle je dost provizorni
 }
 
-void Spell::show_spell() const {
+void Spell::show_spell(cislo odsazeni) const {
 	arena_.out
+		<< std::setw(odsazeni) << ""
 		<< std::setw(30) << name_
 		<< std::setw(15) << damage_
 		<< std::setw(15) << cost_
@@ -38,6 +39,7 @@ Spell * Knihovna::get_spell( std::string spell) const {
 
 void Knihovna::show_spells_header() const {
 	arena_.out
+		<< std::setw(odsazeni::o1) << ""
 		<< std::setw(30) << "Name:"
 		<< std::setw(15) << "Damage:"
 		<< std::setw(15) << "Mana cost:"
@@ -50,7 +52,7 @@ void Knihovna::show_spells() const {
 	show_spells_header();
 	for (auto && spell : spells)
 	{
-		spell.second->show_spell();
+		spell.second->show_spell(odsazeni::o1);
 	}
 	arena_.out << std::endl;
 }
@@ -63,11 +65,11 @@ void Knihovna::show_spells() const {
 void Fire_magic::elemental_passive_( Mage & caster, Mage & target) const {
 	if (arena_.distribution(arena_.generator) < 25) {// 25% sance, ze se mag sam zapali a da si desetinu dmg
 		caster.set_burn(3);
-		arena_.out << caster.get_name() << " podpalil sam sebe." << std::endl;
+		arena_.out << std::setw(odsazeni::o2) << "" << caster.get_name() << " podpalil sam sebe." << std::endl;
 	}
 	if (arena_.distribution(arena_.generator) < 25) {// 25% sance, ze bude podpalen protivnik da si desetinu dmg
 		target.set_burn(3);
-		arena_.out << target.get_name() << " byl podpalen. " << std::endl;
+		arena_.out << std::setw(odsazeni::o2) << "" << target.get_name() << " byl podpalen. " << std::endl;
 	}
 }; 
 
@@ -86,11 +88,11 @@ void Fire_magic::cast_( Mage & caster, Mage & target) const {
 void Ice_magic::elemental_passive_( Mage & caster, Mage & target) const {
 	if (arena_.distribution(arena_.generator) < 50) {
 		caster.set_frozen();
-		arena_.out << caster.get_name() << " se zmrazil a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
+		arena_.out << std::setw(odsazeni::o2) << "" << caster.get_name() << " se zmrazil a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
 	}
 	if (arena_.distribution(arena_.generator) < 50) {
 		target.set_frozen();
-		arena_.out << target.get_name() << " byl zmrazen a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
+		arena_.out << std::setw(odsazeni::o2) << "" << target.get_name() << " byl zmrazen a pristi kouzlo vykouzli o jedno kolo pozdeji." << std::endl;
 	}
 }
 
