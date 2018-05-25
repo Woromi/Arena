@@ -13,8 +13,8 @@ class Mage;
 
 class Arena {
 public:
-	void team1_add(Mage m) { team1_.insert(std::make_pair(m.get_health(), std::make_unique<Mage>(std::move(m)))); }
-	void team2_add(Mage m) { team2_.insert(std::make_pair(m.get_health(), std::make_unique<Mage>(std::move(m)))); }
+	void team1_add(std::unique_ptr<Mage> m) { team1_.insert(std::make_pair(m->get_health(), std::move(m))); }
+	void team2_add(std::unique_ptr<Mage> m) { team2_.insert(std::make_pair(m->get_health(), std::move(m))); }
 	void souboj();
 
 	std::default_random_engine generator; // TODO: Nahoda neni zatim nahodna

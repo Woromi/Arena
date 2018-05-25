@@ -9,10 +9,17 @@
 using cislo = int;
 
 // Vypis (globalni promenne - potrebuju je z vice mist a chci, aby byly vsude stejne)
-static struct odsazeni {
+struct odsazeni {
 	static const cislo o1 = 3;
 	static const cislo o2 = 6;
 	static const cislo o3 = 9;
+};
+
+// Obchodovani - vypocita snizenou cenu predmetu pri prodavani
+struct obchod {
+	static cislo get_sell_price(cislo price) {
+		return price * 75 / 100;
+	}
 };
 
 // Arena + Mage

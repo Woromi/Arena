@@ -38,12 +38,13 @@ void Mage::show_stats() {
 	if (hat_ != nullptr) hat_->show_stats(0);
 	else arena_.out << "No hat" << std::endl;
 	// Stats
-	arena_.out 
+	arena_.out
 		<< std::setw(odsazeni::o1) << "" << "Health: " << health_ << std::endl
 		<< std::setw(odsazeni::o1) << "" << "Health regen: " << health_regen_ << std::endl
 		<< std::setw(odsazeni::o1) << "" << "Mana: " << mana_ << std::endl
 		<< std::setw(odsazeni::o1) << "" << "Mana regen: " << mana_regen_ << std::endl
-		<< std::setw(odsazeni::o1) << "" << "Spell power: " << spell_power_ << std::endl;
+		<< std::setw(odsazeni::o1) << "" << "Spell power: " << spell_power_ << std::endl
+		<< std::setw(odsazeni::o1) << "" << "Money:" << money_ << std::endl;
 	arena_.out << std::endl;
 }
 
@@ -107,12 +108,11 @@ void Mage::akce( team_container & enemy_team) {
 void Mage::buy_weapon( const weapon * new_weapon) {
 	// Pokud nemam zadnou zbran a muzu si to dovolit, zmen mu vlastnosti, a ...
 	if (new_weapon != nullptr) { 
-		if (weapon_ != nullptr) {
-			sell_weapon();
-		}
-		if (new_weapon->buy(*this)) {
+		if (weapon_ != nullptr)
+			if (money_ + obchod::get_sell_price(weapon_->get_price()) >= new_weapon->get_price()) // Pokud neuspeje, neuspeje ani podminka v pristim if
+				sell_weapon();
+		if (new_weapon->buy(*this)) 
 			weapon_ = new_weapon;	// Zapis si, ze si koupil tuhle zbran
-		}
 	}
 }
 
@@ -127,10 +127,10 @@ void Mage::sell_weapon() {
 void Mage::buy_robe(const robe * new_robe) {
 	if (new_robe != nullptr) { // Kopirovani je castym zdrojem chyb
 		if (robe_ != nullptr)
-			sell_robe();
-		if (new_robe->buy(*this)) {
+			if (money_ + obchod::get_sell_price(robe_->get_price()) >= new_robe->get_price())
+				sell_robe();
+		if (new_robe->buy(*this))
 			robe_ = new_robe;
-		}
 	}
 }
 
@@ -146,10 +146,10 @@ void Mage::sell_robe() {
 void Mage::buy_hat(const hat * new_hat) {
 	if (new_hat != nullptr) { // Kopirovani je castym zdrojem chyb
 		if (hat_ != nullptr)
-			sell_hat();
-		if (new_hat->buy(*this)) {
+			if (money_ + obchod::get_sell_price(hat_->get_price()) >= new_hat->get_price())
+				sell_hat();
+		if (new_hat->buy(*this))
 			hat_ = new_hat;
-		}
 	}
 }
 

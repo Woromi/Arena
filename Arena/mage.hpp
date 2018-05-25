@@ -20,9 +20,9 @@ public:
 
 	// Zakaz kopirovani
 	Mage(const Mage &) = delete;
-	Mage(Mage &&) = default;
+	Mage(Mage &&) = delete;
 	Mage & operator=(const Mage &) = delete;
-	Mage & operator=(Mage &&) = default;
+	Mage & operator=(Mage &&) = delete;
 	~Mage() = default;
 
 	void revive();

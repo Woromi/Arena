@@ -4,6 +4,7 @@
 #include <string>
 #include <cctype>
 #include <iomanip>
+#include <memory>
 
 // Funkce pro porovnani stringu bez ohledu na velikost pismen prevzata z https://stackoverflow.com/questions/23943728/case-insensitive-standard-string-comparison-in-c
 bool icompare_pred(unsigned char a, unsigned char b)
@@ -44,15 +45,15 @@ void write_items( const Shop & shop) {
 	// TODO: Pridat dalsi druhy vybaveni
 }
 
-void team(Arena & arena, Mage mage, int i) { // Tady predavam hodnotou, budu presouvat vytvoreneho maga
+void team(Arena & arena, std::unique_ptr<Mage> mage, int i) { // Tady predavam hodnotou, budu presouvat vytvoreneho maga
 	switch (i)
 	{
 	case 1:
-		arena.out << mage.get_name() << " byl zarazen do tymu 1" << std::endl;
+		arena.out << mage->get_name() << " byl zarazen do tymu 1" << std::endl;
 		arena.team1_add(std::move(mage));
 		break;
 	case 2:
-		arena.out << mage.get_name() << " byl zarazen do tymu 2" << std::endl;
+		arena.out << mage->get_name() << " byl zarazen do tymu 2" << std::endl;
 		arena.team2_add(std::move(mage));
 		break;
 	default:
@@ -80,24 +81,25 @@ void read_input( Arena & arena, Knihovna & knihovna, Shop & shop)
 		else if (icompare(vstup, "Shop")) write_items( shop);
 		// Vytvor maga
 		else if (icompare(vstup, "Mage")) {
-			arena.in >> vstup; 
-			Mage mage{ vstup, arena };
-			arena.out << mage.get_name() << " muze nyni navstivit knihovnu nebo obchod." << std::endl << std::endl;
+			arena.in >> vstup;
+			std::unique_ptr<Mage> mage = std::make_unique<Mage>( vstup, arena);
+			// TODO: Mage mage{ vstup, arena };
+			arena.out << mage->get_name() << " muze nyni navstivit knihovnu nebo obchod." << std::endl << std::endl;
 			arena.in >> vstup;
 			// A dokud ho nezaradis do tymu, muzes ho upravovat
 			while (!icompare(vstup, "Team")) {
 				if		(icompare(vstup, "help")) write_help(arena.out);
-				else if (icompare(vstup, "Show")) mage.show_stats();
+				else if (icompare(vstup, "Show")) mage->show_stats();
 				else if (icompare(vstup, "Library")) knihovna.show_spells();
-				else if (icompare(vstup, "Learn")) { my_getline(arena.in, vstup); mage.learn( knihovna.get_spell( vstup)); mage.show_stats(); }
+				else if (icompare(vstup, "Learn")) { my_getline(arena.in, vstup); mage->learn( knihovna.get_spell( vstup)); mage->show_stats(); }
 				else if (icompare(vstup, "Shop")) write_items(shop);
 				else if (icompare(vstup, "Buy")) { 
 					arena.in >> vstup; 
-					if (icompare(vstup, "weapon")) { my_getline(std::cin, vstup);    mage.buy_weapon(shop.get_weapon(vstup)); }
-					else if (icompare(vstup, "robe")) { my_getline(std::cin, vstup); mage.buy_robe(  shop.get_robe(vstup)); }
-					else if (icompare(vstup, "hat")) { my_getline(std::cin, vstup);  mage.buy_hat(   shop.get_hat(vstup)); }
+					if (icompare(vstup, "weapon")) { my_getline(std::cin, vstup);    mage->buy_weapon(shop.get_weapon(vstup)); }
+					else if (icompare(vstup, "robe")) { my_getline(std::cin, vstup); mage->buy_robe(  shop.get_robe(vstup)); }
+					else if (icompare(vstup, "hat")) { my_getline(std::cin, vstup);  mage->buy_hat(   shop.get_hat(vstup)); }
 					else arena.out << "Neznamy typ predmetu: >>" << vstup << "<<" << std::endl << std::endl;
-					mage.show_stats();
+					mage->show_stats();
 				}
 				else if (icompare(vstup, "Fight") || icompare(vstup, "Mage")) arena.out << "Pred pouzitim prikazu >>" << vstup << "<< musis nejprve zaradit maga do tymu" << std::endl << std::endl;
 				else if (icompare(vstup, "Exit")) break;

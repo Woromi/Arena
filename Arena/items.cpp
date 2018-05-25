@@ -29,13 +29,13 @@ bool item::buy( Mage & mage) const {
 	}
 	else {
 		arena_.out << mage.get_name() << " je moc chudy na to, aby si mohl koupit " << this->name_ << std::endl
-			       << "Zustatek: " << mage.get_money() << "(" << name_ << " stoji " << price_ << ")" << std::endl << std::endl;
+			       << "Zustatek: " << mage.get_money() << " (" << name_ << " stoji " << price_ << ")" << std::endl << std::endl;
 		return false;
 	}
 }
 
 void item::sell(Mage & mage) const { // Predpokladam, ze to bude volat pouze mag, ktery ten predmet vlastni (kontroluje se to v Mage.sell_item())
-	mage.spend_money(-price_ / 2);
+	mage.spend_money(-obchod::get_sell_price(price_));
 
 	mage.set_max_health(mage.get_max_health() - health_);
 	mage.add_health_regen(-health_regen_);
